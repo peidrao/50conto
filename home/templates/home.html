@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% block title %}  - Início {% endblock title %} </title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans' type='text/css'>
+</head>
+
+<body>
+     
+    <div class="wrapper-wide">
+        {% block sidebar %} {% endblock  %}
+        {% block navbar %} {% endblock  %}
+        {% block header %} {% endblock  %}
+        {% block content %} {% endblock  %}
+        {% block footer %} {% endblock  %}
+    </div>
+
+    <!--Scripts-->
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
