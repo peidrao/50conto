@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'user',
-    'car'
+    'car',
+    'order'
 ]
 
 MIDDLEWARE = [
@@ -62,7 +63,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'api.wsgi.application'
 
 AUTH_USER_MODEL = 'user.User'
-
 
 
 # Database
