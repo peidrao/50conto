@@ -3,6 +3,7 @@ from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import User
 from django.contrib import messages
+from django.views.generic.base import TemplateView
 # Create your views here.
 
 from django.views.generic.edit import CreateView
@@ -60,11 +61,23 @@ class LoginView(View):
     
 
 
-class SignUpUser(SuccessMessageMixin, CreateView):
+class SignUpUserView(SuccessMessageMixin, CreateView):
+    model = User
     template_name = 'register_user.html'
     success_url =  reverse_lazy('index')
     form_class = RegisterUserForm
     success_message = 'Usuário cadastrado com sucesso'
+
+
+class LogoutUserView(View):
+    def get(self, request):
+        logout_func(request)
+        return HttpResponseRedirect('/')
+
+
+class ProfileUserView(TemplateView):
+    model = User
+    template_name = 'profile_user.html'
 
 
 # def register(request):

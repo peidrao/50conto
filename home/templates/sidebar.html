@@ -1,13 +1,16 @@
-<div class="top-bar">
+<div class="top-bar" {% if request.user.type_user == 1 %} style="background-color: blue;" {% else %} style="background-color: white;" {% endif %}>
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-6">
         <i class="fa fa-envelope"></i>
-        {{request.user.username}}
       </div>
       <div class="col-sm-6">
         <i class="fa fa-phone-alt"></i>
-        +012-345-6789
+       {% if request.user.type_user == 1 %}
+        Bem vindo a sua conta de cliente {{request.user.user}}
+       {% else %}
+       Bem vindo a sua conta de locatário {{request.user.user}}
+       {% endif %}
       </div>
     </div>
   </div>
