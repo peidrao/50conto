@@ -23,7 +23,7 @@ class User(AbstractUser, ModelAbs):
     # phone = models.CharField(max_length=15, null=True, blank=False)
     # address = models.CharField(max_length=150, null=True, blank=False)
     # birth_date = models.DateField(null=True, blank=True)
-    # type_user = models.IntegerField(choices=TYPE_USER, null=True)
+    type_user = models.IntegerField(choices=TYPE_USER, null=True)
     # gender_user = models.IntegerField(choices=GENDER_USER, null=True)
     email = models.EmailField(max_length=254, unique=True)
     REQUIRED_FIELDS = ('username',)

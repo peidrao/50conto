@@ -1,7 +1,8 @@
 {% extends 'home.html' %}
+
+{% block title %} Acessar conta {% endblock title %}
 {% block sidebar %} {% include 'sidebar.html' %} {% endblock %} 
 {% block navbar %} {% include 'navbar.html' %} {% endblock %} 
-{% block header %} {% include 'header.html' %} {% endblock %} 
 {% block content  %} <div id="container">
     {% if messages %}
     {% for message in messages %}

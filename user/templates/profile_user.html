@@ -1,0 +1,14 @@
+{% extends 'home.html' %}
+{% block title %} Perfil -  {{request.user.first_name}}   {% endblock title %}
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %} 
+{% block navbar %} {% include 'navbar.html' %} {% endblock %} 
+{% block content  %}
+<div class="container">
+    <div class="row">
+        {% block menu  %} {% include 'partials/menu.html' %} {% endblock  %}
+        <h3 class="subtitle">Bem vindo, {{user.first_name}}</h3>
+    </div>
+</div>
+
+{% endblock  %}
+{% block footer %} {% include 'footer.html' %} {% endblock %}
