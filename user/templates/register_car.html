@@ -1,0 +1,98 @@
+{% extends 'home.html' %}
+{% block title %} Registrar conta   {% endblock title %}
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %} 
+{% block navbar %} {% include 'navbar.html' %} {% endblock %} 
+{% block content  %} <div id="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="container">
+        <!-- Breadcrumb Start-->
+        <ul class="breadcrumb">
+            <li><a href="/"><i class="fa fa-home"></i></a></li>
+            <li><a href="/register"> Criar conta</a></li>
+        </ul>
+        <!-- Breadcrumb End-->
+          <div class="row">
+        <!--Middle Part Start-->
+        <div id="content" class="col-sm-9">
+            <h1 class="title">Adicionar carro</h1>
+            <div class="row">
+                <div class="col-sm-9">
+                    <h2 class="subtitle">Novo carro</h2>
+                    <p><strong>Adicione os dados do carro a ser alugago</strong></p>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label" for="input-email">Nome do carro</label>
+                            <input type="text" name="carName" value="" placeholder="Nome do carro" id="input-email"
+                                class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="input-email">Placa do veículo</label>
+                            <input type="text" name="plaque" value="" placeholder="Placa do veículo" id="input-email"
+                                class="form-control" />
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label" for="input-email">Modelo</label>
+                            <input type="text" name="car_model" value="" placeholder="Modelo do carro" id="input-email"
+                                class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="input-email">Cor</label>
+                            <input type="text" name="color" value="" placeholder="Cor do carro" id="input-email"
+                                class="form-control" />
+                        </div>
+
+                          <div class="form-group">
+                            <label class="control-label" for="input-email">Ano</label>
+                            <input type="text" name="vehicle_year" value="" placeholder="Ano do veículo" id="input-email"
+                                class="form-control" />
+                        </div>
+                        
+
+                          <div class="form-group">
+                            <label class="control-label" for="input-email">Quilometragem</label>
+                            <input type="text" name="mileage" value="" placeholder="Quilômetros rodados" id="input-email"
+                                class="form-control" />
+                        </div>
+                        
+
+                        <div class="form-group">
+                            <label class="control-label" for="input-email">Status do carro</label>
+                            <input type="text" name="status_car" value="" placeholder="1-Ativado/2-Desativado" id="input-email"
+                                class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="input-email">Data inicial de aluguel</label>
+                            <input type="text" name="initial_date" value="" placeholder="01/06/1998" id="input-email"
+                                class="form-control" />
+                        </div>
+
+                     
+                         <div class="form-group">
+                            <label class="control-label" for="input-email">Data final de aluguel</label>
+                            <input type="text" name="finish_date" value="" placeholder="07/06/1998" id="input-email"
+                                class="form-control" />
+                        </div>
+                             <div class="form-group">
+                            <label class="control-label" for="input-email">Imagem do carro</label>
+                            <input type="file" name="image_car" value="" class="form-control" />
+                        </div>
+
+                        
+                        <input type="submit" value="Criar carro" class="btn btn-primary btn-lg btn-block" /> 
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock  %}
+{% block footer %} {% include 'footer.html' %} {% endblock %}

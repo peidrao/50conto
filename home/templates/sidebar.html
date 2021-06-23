@@ -7,9 +7,9 @@
       <div class="col-sm-6">
         <i class="fa fa-phone-alt"></i>
        {% if request.user.type_user == 1 %}
-        Bem vindo a sua conta de cliente {{request.user.user}}
+        Bem vindo a sua conta de cliente {{request.user.username}}
        {% else %}
-       Bem vindo a sua conta de locatário {{request.user.user}}
+       Bem vindo a sua conta de locatário {{request.user.username}}
        {% endif %}
       </div>
     </div>

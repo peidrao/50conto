@@ -1,0 +1,60 @@
+{% extends 'home.html' %}
+{% block title %} Perfil -  {{request.user.first_name}}   {% endblock title %}
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %} 
+{% block navbar %} {% include 'navbar.html' %} {% endblock %} 
+{% block content  %}
+<div class="container">
+    <div class="row">
+        {% comment %} {% block menu  %} {% include 'partials/menu.html' %} {% endblock  %} {% endcomment %}
+
+      <table class="table">
+  <thead class="thead-dark">
+    <tr>
+    <th scope="col">ID</th>
+     <th scope="col">Imagem</th>
+      <th scope="col">nome do carro</th>
+      <th scope="col">Ano do carro</th>
+      <th scope="col">Cor do carro</th>
+      <th scope="col">Status do carro</th>
+      <th scope="col">KM rodados</th>
+      <th scope="col">Editar/Excluir</th>  
+    </tr>
+  </thead>
+  <tbody>
+    {% for car in object_list %}
+    <tr>
+      <th scope="row">{{car.id}}</th>
+      <td>
+      {% if car.image_car.url is not None %}
+      <img src="{{car.image_car.url}}" alt="{{car.carName}}" width="250" height="150">
+      {% else %}
+      <p>Sem imagem</p>
+      {% endif %}</td>
+      <td>{{car.carName}}</td>
+      <td>{{car.vehicle_year}}</td>
+      <td>{{car.color}}</td>
+      <td>{{car.status_car}}</td>
+      <td>{{car.mileage}}</td>
+      <td>
+        
+           <button type="button" class="btn btn-primary">
+            <a href="/update_car/{{car.id}}">Atualizar</a>
+          </button>   
+           
+            <form method="post" action="{% url 'user:delete_car' car.id %}">{% csrf_token %}
+              <input type="submit" class="btn btn-primary" value="Apagar">
+            </form>
+       </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+    </div>
+</div>
+
+{% endblock  %}
+{% block footer %} {% include 'footer.html' %} {% endblock %}
+
+
+

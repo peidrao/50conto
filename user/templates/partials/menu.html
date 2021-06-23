@@ -18,6 +18,16 @@
       <tr>
         <th scope="row"><a href="/user/order_book">Livros comprados</a></th>
       </tr>
+      {% if request.user.type_user == 2 %}
+        <tr>
+        <th scope="row"><a href="/add_new_car">Adicionar novo carro</a></th>
+        </tr>
+         <tr>
+        <th scope="row"><a href="/list_cars/{{request.user.id}}">Carros cadastrados</a></th>
+        </tr>
+    
+      
+      {% endif %}
     </tbody>
   </table>
 </aside>

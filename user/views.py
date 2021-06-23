@@ -1,40 +1,21 @@
+from pdb import set_trace
 from django.contrib.auth import authenticate, login as auth_login, logout as logout_func
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render, HttpResponse, HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
 # from django.contrib.auth.models import User
 from django.contrib import messages
 from django.views.generic.base import TemplateView
 # Create your views here.
 
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView, ModelFormMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import View
+from django.views.generic import View, ListView, UpdateView
 from django.urls import reverse_lazy
 
 from user.forms import RegisterUserForm
+from car.forms import RegisterCarForm, CarUpdateForm
 from user.models import User
-
-
-# def login(request):
-#     if request.method == 'POST':
-#         email = request.POST['email']
-#         password = request.POST['password']
-#         user = authenticate(request, email=email, password=password)
-#         if user is not None:
-#             auth_login(request, user)
-#             # current_user = request.user
-#             # userprofile = User.objects.get(user_id=current_user.id)
-#             # request.session['userimage'] = userprofile.image.url
-#             return HttpResponseRedirect('/profile')
-#         else:
-#             messages.warning(
-#                 request, 'Erro! Lemail ou senha errados')
-#             return HttpResponseRedirect('/login')
-
-#     # genre = Genre.objects.all()
-#     # context = {'genre': genre}
-    # return render(request, 'login_user.html', {})
-
+from car.models import Car
 
 class LoginView(View):
     template_name = 'login_user.html'
@@ -58,8 +39,6 @@ class LoginView(View):
             messages.warning(request, 'Erro! Lemail ou senha errados')
             return HttpResponseRedirect('/login')
         
-    
-
 
 class SignUpUserView(SuccessMessageMixin, CreateView):
     model = User
@@ -80,27 +59,83 @@ class ProfileUserView(TemplateView):
     template_name = 'profile_user.html'
 
 
-# def register(request):
-#     if request.method == 'POST':
-#         form = RegisterUserForm(request.POST)
+class UserCreateCarView(SuccessMessageMixin, CreateView):
+    template_name = 'register_car.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+
+    def post(self, request):
+        form = RegisterCarForm(request.POST, request.FILES)
+        if form.is_valid():
+            car = form.save(commit=False)
+            car.user = request.user
+            car.save()
+            # data = Car()
+            # import pdb;pdb.set_trace()
+            
+            # data.save()
+            messages.success(request, 'Carro adicionado a sua conta')
+            return HttpResponseRedirect('/add_new_car')
+        else:
+            messages.warning(request, form.errors)
+            return HttpResponseRedirect('/add_new_car')
+
+
+class ListUserCarsView(ListView):
+    template_name = 'list_cars.html'
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        user = Car.objects.filter(user_id=pk)
+        return user
+
+class UpdateCarView(UpdateView):
+    model = Car
+    template_name = "update_car.html"
+    context_object_name = 'car_update'
+    success_message = 'Carro editado com sucesso'
+    success_url = "/"
+    form_class = CarUpdateForm
+
+    def form_invalid(self, form):
+        return HttpResponse("form is invalid.. this is just an HttpResponse object")
+
+
+class DeleteCarView(DeleteView):
+    model = Car
+    success_url ="/"
+    
+
+
+
+        
+
+# # form = RegisterCarForm(request.POST, request.FILES)
 #         if form.is_valid():
-#             form.save()
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password1')
-#             user = authenticate(username=username, password=password)
-#             auth_login(request, user)
-#             current_user = request.user
-#             data = User()
-#             data.user_id = current_user.id
-#             # data.image = 'images/users/user.png'
-#             data.save()
-#             messages.success(request, 'Sua conta foi criada com sucesso!')
-#             return HttpResponseRedirect('/')
+#             car = form.save(commit=False)
+#             car.user = request.user
+#             car.save()
+#             # data = Car()
+#             # import pdb;pdb.set_trace()
+            
+#             # data.save()
+#             messages.success(request, 'Carro adicionado a sua conta')
+#             return HttpResponseRedirect('/add_new_car')
 #         else:
 #             messages.warning(request, form.errors)
-#             return HttpResponseRedirect('/register')
+#             return HttpResponseRedirect('/add_new_car')
 
-#     form = RegisterUserForm()
-#     # genre = Genre.objects.all()
-#     context = {'form': form}
-#     return render(request, 'register_user.html', context)
+
+    # def post(self, request, *args, **kwargs):
+    #     # Get instance of PhysicalPart
+    #     self.object = self.get_object()
+    #     # Load form
+    #     form = self.get_form()
+    #     # Add choices to form 'subcategory' field
+    #     form.fields['subcategory'].choices = SubcategoryFilter[self.object.category]
+    #     # Check if form is valid and save PhysicalPart instance
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+            # return self.form_invalid(form)

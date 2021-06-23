@@ -3,11 +3,16 @@ from django.contrib.auth.decorators import login_required
 
 from . import views
 
+app_name = 'user'
+
 urlpatterns = [
     # path('register/', views.register, name='register'),
     path('register/', views.SignUpUserView.as_view(), name='register'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutUserView.as_view(), name='login'),
     path('profile/', login_required(views.ProfileUserView.as_view()), name='profile'),
-    # path('login/', views.login, name='login')
+    path('add_new_car/', login_required(views.UserCreateCarView.as_view()), name='add_new_car'),
+    path('list_cars/<int:pk>', login_required(views.ListUserCarsView.as_view()), name='list_cars'),
+    path('update_car/<int:pk>', login_required(views.UpdateCarView.as_view()), name='update_car'),
+    path('delete_car/<int:pk>', login_required(views.DeleteCarView.as_view()), name='delete_car'),
 ]
