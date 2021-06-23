@@ -50,10 +50,31 @@ class Order(ModelAbs):
   last_name = models.CharField(max_length=50, null=False, blank=False)
   city = models.CharField(max_length=75, null=False, blank=False)
   state_order = models.IntegerField(choices=STATE_ORDER, null=False)
-  address = models.CharField(max_length=250, null=False, blank=False)
-  number = models.CharField(max_length=11, null=False, blank=False, verbose_name='Nº telefone celular')
+  address = models.CharField('Endereço', max_length=250, null=False, blank=False)
+  number = models.CharField('Nº telefone celular', max_length=11, null=False, blank=False)
 
   def __str__(self) -> str:
       return self.car.title
 
-  
+
+class ShopCar(ModelAbs):
+
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  car = models.ForeignKey(Car, on_delete=models.CASCADE)  
+  quantity = models.IntegerField(null=False)
+
+  def __str__(self) -> str:
+      return self.car.title
+
+
+class OrderCar(ModelAbs):
+
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  car = models.ForeignKey(Car, on_delete=models.CASCADE)  
+  order = models.ForeignKey(Order, on_delete=models.CASCADE) 
+  amount = models.FloatField(null=False, blank=False)
+  quantity = models.IntegerField(null=False, blank=False)
+  price = models.FloatField(null=False, blank=False)
+
+  def __str__(self) -> str:
+      return self.car.title
