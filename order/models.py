@@ -56,4 +56,25 @@ class Order(ModelAbs):
   def __str__(self) -> str:
       return self.car.title
 
-  
+
+class ShopCar(ModelAbs):
+
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  car = models.ForeignKey(Car, on_delete=models.CASCADE)  
+  quantity = models.IntegerField(null=False)
+
+  def __str__(self) -> str:
+      return self.car.title
+
+
+class OrderCar(ModelAbs):
+
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  car = models.ForeignKey(Car, on_delete=models.CASCADE)  
+  order = models.ForeignKey(Order, on_delete=models.CASCADE) 
+  amount = models.FloatField(null=False, blank=False)
+  quantity = models.IntegerField(null=False, blank=False)
+  price = models.FloatField(null=False, blank=False)
+
+  def __str__(self) -> str:
+      return self.car.title
