@@ -8,5 +8,5 @@ class HomeView(View):
     template_name = 'index.html'
 
     def get(self, request, *args, **kwargs):
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         return render(request, self.template_name, {})
