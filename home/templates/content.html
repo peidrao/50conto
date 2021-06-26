@@ -131,7 +131,7 @@
       <div class="col-lg-3">
         <div class="product-item">
           <div class="product-title">
-            <a href="#">{{car.carName}}</a>
+            <a href="{% url 'car:car_detail' car.id %}">{{car.carName}}</a>
             <div class="ratting">
               <i class="fa fa-star"></i>
               <i class="fa fa-star"></i>
