@@ -1,0 +1,85 @@
+{% extends 'home.html' %}
+
+{% block title %} Início   {% endblock title %}
+{% block sidebar  %} {% include 'sidebar.html' %} {% endblock  %}
+{% block navbar  %} {% include 'navbar.html' %} {% endblock  %}
+
+{% block content  %}
+<!-- Cart Start -->
+<div class="cart-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="cart-page-inner">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Carro</th>
+                                    <th>Preço por dia</th>
+                                    <th>Dias</th>
+                                    <th>Total</th>
+                                    <th>Remover</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="align-middle">
+                              {% for  cart in shopcart  %}
+                                <tr>
+                                    <td>
+                                        <div class="img">
+                                            <a href="#"><img src="{{cart.car.image_car.url}}" alt="Image"></a>
+                                            <p>{{car.carName}}</p>
+                                        </div>
+                                    </td>
+                                    <td> R$ {{cart.car.price_day}} </td>
+                                    <td>
+                                        <div class="qty">
+
+                                            <input type="text" value="{{cart.quantity}}">
+
+                                        </div>
+                                    </td>
+                                    <td>R$ {{total}}</td>
+                                    <form method="post" action="{% url 'order:delete_cart' cart.id %}">{% csrf_token %}
+                                        <td>
+                                        <button type="submit" id="button-cart" class=""><i class="fa fa-trash"></i></button>
+                                        </td>
+                                    </form>
+
+                                    
+                                </tr>
+                              
+                              {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart-page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="cart-summary">
+                                <div class="cart-content">
+                                    <h1>Carrinho</h1>
+                                    <p>Sub Total<span>R$ {{total}} </span></p>
+                                    <h2>Total<span>R$ {{total}} </span></h2>
+                                </div>
+                                <div class="cart-btn">
+                                   <a href="{% url 'order:create_order' %}">
+                                    <button>Finalizar</button>
+                                   </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cart End -->
+
+{% endblock  %}
+{% block footer  %} {% include 'footer.html' %} {% endblock  %}

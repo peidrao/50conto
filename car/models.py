@@ -12,9 +12,9 @@ class Car(ModelAbs):
           
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    price_day = models
+    price_day = models.DecimalField(max_digits=6, decimal_places=2)
     image_car = models.ImageField(upload_to="media", null=True, blank=True)
-    #title = models.CharField(max_length=50, null=False, blank=False)
+    description = models.TextField(null=False, blank=False)
     carName = models.CharField(max_length = 20,null=True, blank=False)
     plaque = models.CharField(max_length = 10,null=True, blank=False)
     car_model = models.CharField(max_length = 20,null=True, blank=False)
