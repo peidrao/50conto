@@ -1,4 +1,3 @@
-from pdb import set_trace
 from django.contrib.auth import authenticate, login as auth_login, logout as logout_func
 from django.shortcuts import get_object_or_404, render, HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -71,10 +70,7 @@ class UserCreateCarView(SuccessMessageMixin, CreateView):
             car = form.save(commit=False)
             car.user = request.user
             car.save()
-            # data = Car()
-            # import pdb;pdb.set_trace()
-            
-            # data.save()
+
             messages.success(request, 'Carro adicionado a sua conta')
             return HttpResponseRedirect('/add_new_car')
         else:
@@ -84,6 +80,7 @@ class UserCreateCarView(SuccessMessageMixin, CreateView):
 
 class ListUserCarsView(ListView):
     template_name = 'list_cars.html'
+    context_object_name = "car_list"
 
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -105,37 +102,3 @@ class UpdateCarView(UpdateView):
 class DeleteCarView(DeleteView):
     model = Car
     success_url ="/"
-    
-
-
-
-        
-
-# # form = RegisterCarForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             car = form.save(commit=False)
-#             car.user = request.user
-#             car.save()
-#             # data = Car()
-#             # import pdb;pdb.set_trace()
-            
-#             # data.save()
-#             messages.success(request, 'Carro adicionado a sua conta')
-#             return HttpResponseRedirect('/add_new_car')
-#         else:
-#             messages.warning(request, form.errors)
-#             return HttpResponseRedirect('/add_new_car')
-
-
-    # def post(self, request, *args, **kwargs):
-    #     # Get instance of PhysicalPart
-    #     self.object = self.get_object()
-    #     # Load form
-    #     form = self.get_form()
-    #     # Add choices to form 'subcategory' field
-    #     form.fields['subcategory'].choices = SubcategoryFilter[self.object.category]
-    #     # Check if form is valid and save PhysicalPart instance
-    #     if form.is_valid():
-    #         return self.form_valid(form)
-    #     else:
-            # return self.form_invalid(form)
