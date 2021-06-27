@@ -1,0 +1,20 @@
+{% extends 'home.html' %}
+
+{% block title %} Início   {% endblock title %}
+{% block sidebar  %} {% include 'sidebar.html' %} {% endblock  %}
+{% block navbar  %} {% include 'navbar.html' %} {% endblock  %}
+
+ 
+{% block content  %} 
+<div class="container">
+        <!-- Breadcrumb Start-->
+        <h2>Compra finalizada</h2>
+
+        <h2>{{request.user.first_name}} {{request.last_name}} </h2>
+        <h3>Sua compra foi finalizada</h3>
+        <h3>Seu código: {{ordercode}}</h3>
+        <h3>Obrigado por comprar conosco</h3>
+
+    </div>
+{% endblock  %}
+{% block footer  %} {% include 'footer.html' %} {% endblock  %}
