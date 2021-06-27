@@ -15,4 +15,5 @@ urlpatterns = [
     path('list_cars/<int:pk>', login_required(views.ListUserCarsView.as_view()), name='list_cars'),
     path('update_car/<int:pk>', login_required(views.UpdateCarView.as_view()), name='update_car'),
     path('delete_car/<int:pk>', login_required(views.DeleteCarView.as_view()), name='delete_car'),
+    path('my_car/<int:pk>', login_required(views.ListMyCarView.as_view()), name='my_car'),
 ]

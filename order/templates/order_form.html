@@ -21,11 +21,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label>First Name</label>
-                                <input class="form-control" name="first_name" type="text" placeholder="First Name">
+                                <input class="form-control" name="first_name" value="{{user.first_name}}" type="text" placeholder="First Name">
                             </div>
                             <div class="col-md-6">
                                 <label>Last Name"</label>
-                                <input class="form-control" name="last_name" type="text" placeholder="Last Name">
+                                <input class="form-control" name="last_name" value="{{user.last_name}}" type="text" placeholder="Last Name">
                             </div>
                             <div class="col-md-12">
                                 <label>Address</label>
@@ -55,11 +55,9 @@
             <div class="col-lg-4">
                 <div class="checkout-inner">
                     <div class="checkout-summary">
-                        <h1>Cart Total</h1>
-                        <p>Product Name<span>$99</span></p>
-                        <p class="sub-total">Sub Total<span>$99</span></p>
-                        <p class="ship-cost">Shipping Cost<span>$1</span></p>
-                        <h2>Grand Total<span>$100</span></h2>
+                        <h1>Carrinho</h1>
+                        <p class="sub-total">Sub Total<span>R$ {{total}} </span></p>
+                        <h2>Total<span>R$ {{total}} </span></h2>
                     </div>
 
                     <div class="checkout-payment">
@@ -131,7 +129,6 @@
         </div>
     </div>
 </div>
-<!-- Checkout End -->
 
 {% endblock  %}
 {% block footer  %} {% include 'footer.html' %} {% endblock  %}

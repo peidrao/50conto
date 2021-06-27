@@ -24,10 +24,14 @@
         </tr>
          <tr>
         <th scope="row"><a href="/list_cars/{{request.user.id}}">Carros cadastrados</a></th>
-        </tr>
-    
-      
+        </tr>   
+        {% elif request.user.type_user == 1 %}
+         <tr>
+        <th scope="row"><a href="{% url 'user:my_car' request.user.id %}">Carros Alugados</a></th>
+        </tr>   
+
       {% endif %}
+
     </tbody>
   </table>
 </aside>

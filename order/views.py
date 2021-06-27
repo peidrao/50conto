@@ -1,4 +1,6 @@
+from django import contrib
 from car.models import Car
+from user.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils.crypto import get_random_string
 from django.shortcuts import HttpResponseRedirect
@@ -70,9 +72,25 @@ class CreateOrderView(generic.CreateView):
     template_name = "order_form.html"
     form_class = CreateOrderForm
 
+    def get(self, request, *args, **kwargs):
+        shopcart = ShopCart.objects.filter(user_id=request.user.id)
+        user = User.objects.get(id=request.user.id)
+        total = 0
+        for cart in shopcart:
+            total = cart.car.price_day * cart.quantity
+
+        context = {
+            'total': total,
+            'user': user
+        }
+
+        return render(request, self.template_name, context)
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         shopcart = ShopCart.objects.filter(user_id=request.user.id)
+        # car = Car.objects.get(user_id=request.user.id)
+        
         total = 0
         for cart in shopcart:
             total = cart.car.price_day * cart.quantity
@@ -102,8 +120,10 @@ class CreateOrderView(generic.CreateView):
                 detail.save()
 
                 car = Car.objects.get(id=rs.car_id)
+                car.status_car = 2
                 car.save()
             ShopCart.objects.filter(user_id=request.user.id).delete()
+
             # request.session['cart_items'] = 0
 
             messages.success(
@@ -116,18 +136,6 @@ class CreateOrderView(generic.CreateView):
             return render(request, 'order_completed.html', context)
         else:
             messages.warning(request, form.errors)
-            
             return HttpResponseRedirect('/order/orderbook')
-
-        # form = OrderForm()
-        # profile = UserProfile.objects.get(user_id=current_user.id)
-        # context = {'shopcart': shopcart,
-        #        'genre': genre,
-        #        'total': total,
-        #        'form': form,
-        #        'profile': profile}
-
-        # return render(request, 'order_form.html', context)
-
 
             

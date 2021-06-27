@@ -1,0 +1,52 @@
+{% extends 'home.html' %}
+{% block title %} Perfil -  {{request.user.first_name}}   {% endblock title %}
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %} 
+{% block navbar %} {% include 'navbar.html' %} {% endblock %} 
+{% block content  %}
+<div class="container">
+    <div class="row">
+        {% comment %} {% block menu  %} {% include 'partials/menu.html' %} {% endblock  %} {% endcomment %}
+
+      <table class="table">
+  <thead class="thead-dark">
+    <tr>
+    <th scope="col">ID</th>
+     <th scope="col">Imagem</th>
+      <th scope="col">Dias de aluguel</th>
+      <th scope="col">Editar/Excluir</th>  
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in order_car %}
+    <tr>
+      <th scope="row">{{order.id}}</th>
+      <td>
+      {% if order.car.image_car.url is not None %}
+      <img src="{{order.car.image_car.url}}" alt="{{order.car.carName}}" width="250" height="150">
+      {% else %}
+      <p>Sem imagem</p>
+      {% endif %}</td>
+      <td>{{order.quantity}}</td>
+      {% comment %} <td>
+        
+           <button type="button" class="btn btn-primary">
+            <a href="/update_car/{{car.id}}">Atualizar</a>
+          </button>   
+           
+            <form method="post" action="{% url 'user:delete_car' car.id %}">{% csrf_token %}
+              <input type="submit" class="btn btn-primary" value="Apagar">
+            </form>
+       </td> {% endcomment %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+    </div>
+</div>
+
+{% endblock  %}
+{% block footer %} {% include 'footer.html' %} {% endblock %}
+
+
+
