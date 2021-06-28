@@ -43,9 +43,19 @@ class LoginView(View):
 class SignUpUserView(SuccessMessageMixin, CreateView):
     model = User
     template_name = 'register_user.html'
-    success_url =  reverse_lazy('index')
+    success_url =  reverse_lazy('home:index')
     form_class = RegisterUserForm
     success_message = 'Usuário cadastrado com sucesso'
+
+    def get(self, request, *args, **kwargs):
+
+        context = {
+          'user_list': User
+        }
+
+        # import pdb;pdb.set_trace()
+
+        return render(request, self.template_name, context)
 
 
 class LogoutUserView(View):
