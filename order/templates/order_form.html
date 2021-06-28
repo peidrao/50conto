@@ -41,8 +41,15 @@
                                 <input class="form-control" name="number" type="text" placeholder="City">
                             </div>
                             <div class="col-md-6">
-                                <label>State</label>
-                                <input class="form-control" name="state_order" type="text" placeholder="State">
+                                <label>Estado</label>
+                                <select name="state_order"  class="form-control">
+                               {% for val, name in list.STATE_ORDER %}
+                                    <option value="{{val}}">{{name}}</option>
+                                {% endfor %}
+                                </select>
+
+
+                                {% comment %} <input class="form-control" name="state_order" type="text" placeholder="State"> {% endcomment %}
                             </div>
                             <div class="col-md-6">
                                 <label>ZIP Code</label>

@@ -13,7 +13,7 @@
     <th scope="col">ID</th>
      <th scope="col">Imagem</th>
       <th scope="col">Dias de aluguel</th>
-      <th scope="col">Editar/Excluir</th>  
+      <th scope="col">Data do aluguel</th>  
     </tr>
   </thead>
   <tbody>
@@ -27,6 +27,8 @@
       <p>Sem imagem</p>
       {% endif %}</td>
       <td>{{order.quantity}}</td>
+      <td>{{order.created_at|date:"d/m/y"}}</td>
+      
       {% comment %} <td>
         
            <button type="button" class="btn btn-primary">

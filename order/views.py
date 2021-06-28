@@ -73,6 +73,7 @@ class CreateOrderView(generic.CreateView):
     form_class = CreateOrderForm
 
     def get(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
         shopcart = ShopCart.objects.filter(user_id=request.user.id)
         user = User.objects.get(id=request.user.id)
         total = 0
@@ -81,8 +82,12 @@ class CreateOrderView(generic.CreateView):
 
         context = {
             'total': total,
-            'user': user
+            'user': user,
+            'form': form,
+            'list': Order
         }
+
+        # import pdb;pdb.set_trace()
 
         return render(request, self.template_name, context)
 
