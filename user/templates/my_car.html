@@ -13,7 +13,8 @@
     <th scope="col">ID</th>
      <th scope="col">Imagem</th>
       <th scope="col">Dias de aluguel</th>
-      <th scope="col">Data do aluguel</th>  
+      <th scope="col">Data do aluguel</th>
+      <th scope="col">Avaliar carro</th>
     </tr>
   </thead>
   <tbody>
@@ -28,17 +29,11 @@
       {% endif %}</td>
       <td>{{order.quantity}}</td>
       <td>{{order.created_at|date:"d/m/y"}}</td>
-      
-      {% comment %} <td>
-        
-           <button type="button" class="btn btn-primary">
-            <a href="/update_car/{{car.id}}">Atualizar</a>
-          </button>   
-           
-            <form method="post" action="{% url 'user:delete_car' car.id %}">{% csrf_token %}
-              <input type="submit" class="btn btn-primary" value="Apagar">
-            </form>
-       </td> {% endcomment %}
+      <td> 
+          <button type="button" class="btn btn-primary">
+            <a href="{% url 'user:rate_car' order.car.id %}">Avaliar carro</a>
+          </button>    
+       </td> 
     </tr>
     {% endfor %}
   </tbody>

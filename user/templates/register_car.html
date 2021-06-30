@@ -71,14 +71,16 @@
                             <input type="text" name="mileage" value="" placeholder="Quilômetros rodados" id="input-email"
                                 class="form-control" />
                         </div>
-                        
+                           <div class="form-group">
+                                <label>Status do carro</label>
+                                <select name="status_car"  class="form-control">
+                               {% for val, name in car_options.STATUS_CAR %}
+                                    <option value="{{val}}">{{name}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
 
-                        <div class="form-group">
-                            <label class="control-label" for="input-email">Status do carro</label>
-                            <input type="text" name="status_car" value="" placeholder="1-Ativado/2-Desativado" id="input-email"
-                                class="form-control" />
-                        </div>
-
+                   
                         <div class="form-group">
                             <label class="control-label" for="input-email">Data inicial de aluguel</label>
                             <input type="text" name="initial_date" value="" placeholder="01/06/1998" id="input-email"

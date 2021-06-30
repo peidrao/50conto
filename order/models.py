@@ -7,10 +7,9 @@ from car.models import Car
 # Create your models here.
 class Order(ModelAbs):
   STATUS_ORDER = (
-      (1, 'Accepted'),
-      (2, 'Available'),
-      (3, 'Not_Available'),
-      (4, 'Canceled'),
+      (1, 'Pagamento feito'),
+      (2, 'Aguardando pagamento'),
+      (3, 'Cancelar'),
   )
   STATE_ORDER = (
       (1, 'AC - Acre'),

@@ -12,9 +12,9 @@ from django.views.generic import View, ListView, UpdateView
 from django.urls import reverse_lazy
 
 from user.forms import RegisterUserForm
-from car.forms import RegisterCarForm, CarUpdateForm
+from car.forms import RegisterCarForm, CarUpdateForm, RateCarUserForm
 from user.models import User
-from car.models import Car
+from car.models import Car, Review
 from order.models import OrderCar
 
 class LoginView(View):
@@ -73,7 +73,7 @@ class UserCreateCarView(SuccessMessageMixin, CreateView):
     template_name = 'register_car.html'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
+        return render(request, self.template_name, {'car_options': Car})
 
     def post(self, request):
         form = RegisterCarForm(request.POST, request.FILES)
@@ -127,6 +127,12 @@ class UpdateCarView(UpdateView):
     def form_invalid(self, form):
         return HttpResponse("form is invalid.. this is just an HttpResponse object")
 
+
+
+class RateCarUserView(CreateView):
+    model = Review
+    form_class = RateCarUserForm
+    templat_name = "rate_car.html"
 
 class DeleteCarView(DeleteView):
     model = Car

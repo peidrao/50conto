@@ -39,11 +39,12 @@
                                         <div class="price">
                                             <h4>Preço por dia</h4>
                                             <p>R$ {{object.price_day}} <span>$149</span></p>
+                                            <p>Dias disponíveis {{object.day}} </p>
                                         </div>
                                         <div class="action">
                                         <form action="/add_shopcart/{{object.id}}" method="POST">
                                         {% csrf_token %}
-                                          <input class="input" name="quantity" type="number" value="1" min="1">
+                                          <input class="input" name="quantity" type="number" value="1" min="1" max="{{object.day}}">
                                         <button type="submit" id="button-cart" class="btn btn-primary btn-lg"><i class="fa fa-shopping-bag"></i>Alugar carro</button>
                                         </form>
 
