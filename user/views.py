@@ -132,7 +132,28 @@ class UpdateCarView(UpdateView):
 class RateCarUserView(CreateView):
     model = Review
     form_class = RateCarUserForm
-    templat_name = "rate_car.html"
+    template_name = "rate_car.html"
+
+
+    def post(self, request, id):
+        form = self.form_class(request.POST)
+        # import pdb;pdb.set_trace()
+        if form.is_valid():
+            review = form.save(commit=False)
+            car = Car.objects.get(id=id)
+            review.user = request.user
+            review.car = car
+            review.save()
+
+            messages.success(request, 'Comentário feito com sucesso!')
+            return HttpResponseRedirect('/')
+        else:
+            messages.warning(request, form.errors)
+            return HttpResponseRedirect('/add_new_car')
+
+    def form_invalid(self, form):
+        return HttpResponse("form is invalid.. this is just an HttpResponse object")
+
 
 class DeleteCarView(DeleteView):
     model = Car

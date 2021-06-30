@@ -23,4 +23,4 @@ class CarUpdateForm(forms.ModelForm):
 class RateCarUserForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = "__all__"
+        fields = ("subject", "title", "comment", "rate",)

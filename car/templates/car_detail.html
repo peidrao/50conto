@@ -79,7 +79,7 @@
                                         <a class="nav-link" data-toggle="pill" href="#specification">Especificações</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="pill" href="#reviews">Avaliação</a>
+                                        <a class="nav-link" data-toggle="pill" href="#reviews">Avaliações ({{object.count_reviews}})</a>
                                     </li>
                                 </ul>
 
@@ -95,6 +95,21 @@
                                         <p>{{object.description}}</p>
                                     </div>
                                     <div id="reviews" class="container tab-pane fade">
+                                        <div class="reviews-submit">
+                                            <h4>Avaliação Geral</h4>
+                                            <div class="ratting">
+                                            <i class="{% if object.general_rate < 1 %} fa {% else %} far {% endif %} fa-star"></i>
+                                            <i class="{% if object.general_rate < 2 %} fa {% else %} far {% endif %} fa-star"></i>
+                                            <i class="{% if object.general_rate < 3 %} fa {% else %} far {% endif %} fa-star"></i>
+                                            <i class="{% if object.general_rate < 4 %} fa {% else %} far {% endif %} fa-star"></i>
+                                            <i class="{% if object.general_rate < 5 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                {% comment %} {% if object.general_rate < 1  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %}
+                                                {% if object.general_rate < 2  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %}
+                                                {% if object.general_rate < 3  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %}
+                                                {% if object.general_rate < 4  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %}
+                                                {% if object.general_rate < 5  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %} {% endcomment %}
+                                            </div>
+                                        </div>
                                         <div class="reviews-submitted">
                                             <div class="reviewer">Phasellus Gravida - <span>01 Jan 2020</span></div>
                                             <div class="ratting">
@@ -107,30 +122,6 @@
                                             <p>
                                                 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
                                             </p>
-                                        </div>
-                                        <div class="reviews-submit">
-                                            <h4>Give your Review:</h4>
-                                            <div class="ratting">
-                                                <i class="far fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                            </div>
-                                            <div class="row form">
-                                                <div class="col-sm-6">
-                                                    <input type="text" placeholder="Name">
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="email" placeholder="Email">
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <textarea placeholder="Review"></textarea>
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <button>Submit</button>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
