@@ -5,19 +5,6 @@ from django import forms
 from car.models import Car, Review
 
 
-class RegisterCarForm(forms.ModelForm):
-
-    class Meta:
-        model = Car
-        fields = ('carName', 'plaque', 'car_model', 'color', 'image_car', 'price_day', 'description',
-                  'vehicle_year', 'mileage', 'status_car', 'initial_date', 'finish_date', )
-
-
-class CarUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Car
-        fields = ('carName', 'plaque', 'car_model', 'color', 'image_car', 'price_day', 'description',
-                  'vehicle_year', 'mileage', 'status_car', 'initial_date', 'finish_date', )
 
 
 class RateCarUserForm(forms.ModelForm):

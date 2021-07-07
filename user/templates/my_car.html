@@ -22,11 +22,9 @@
     <tr>
       <th scope="row">{{order.id}}</th>
       <td>
-      {% if order.car.image_car.url is not None %}
-      <img src="{{order.car.image_car.url}}" alt="{{order.car.carName}}" width="250" height="150">
-      {% else %}
-      <p>Sem imagem</p>
-      {% endif %}</td>
+      
+      <img src="{{order.car.image_car}}" alt="{{order.car.carName}}" width="250" height="150">
+      
       <td>{{order.quantity}}</td>
       <td>{{order.created_at|date:"d/m/y"}}</td>
       <td> 

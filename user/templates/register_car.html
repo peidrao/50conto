@@ -28,11 +28,6 @@
                     <form action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label class="control-label" for="input-email">Nome do carro</label>
-                            <input type="text" name="carName" value="" placeholder="Nome do carro" id="input-email"
-                                class="form-control" />
-                        </div>
-                        <div class="form-group">
                             <label class="control-label" for="input-email">Placa do veículo</label>
                             <input type="text" name="plaque" value="" placeholder="Placa do veículo" id="input-email"
                                 class="form-control" />
@@ -40,11 +35,6 @@
                          <div class="form-group">
                             <label class="control-label" for="input-email">Modelo</label>
                             <input type="text" name="car_model" value="" placeholder="Modelo do carro" id="input-email"
-                                class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="input-email">Cor</label>
-                            <input type="text" name="color" value="" placeholder="Cor do carro" id="input-email"
                                 class="form-control" />
                         </div>
 
@@ -59,16 +49,9 @@
                             <input type="textarea" name="description" value="" placeholder="Decrição do veículo" id="input-email"
                                 class="form-control" />
                         </div>
-                        
                         <div class="form-group">
                             <label class="control-label" for="input-email">Preço por dia</label>
                             <input type="textarea" name="price_day" value="" placeholder="Preço por dia" id="input-email"
-                                class="form-control" />
-                        </div>
-
-                          <div class="form-group">
-                            <label class="control-label" for="input-email">Quilometragem</label>
-                            <input type="text" name="mileage" value="" placeholder="Quilômetros rodados" id="input-email"
                                 class="form-control" />
                         </div>
                            <div class="form-group">
@@ -80,22 +63,41 @@
                                 </select>
                             </div>
 
+                            <div class="form-group">
+                                <label>Cor do carro</label>
+                                <select name="color"  class="form-control">
+                               {% for val, name in car_options.COLOR %}
+                                    <option value="{{val}}">{{name}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+
+                             <div class="form-group">
+                                <label>Marca do carro</label>
+                                <select name="brand" class="form-control">
+                               {% for val, name in car_options.BRAND %}
+                                    <option value="{{val}}">{{name}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+
                    
                         <div class="form-group">
                             <label class="control-label" for="input-email">Data inicial de aluguel</label>
-                            <input type="text" name="initial_date" value="" placeholder="01/06/1998" id="input-email"
+                            <input type="date" name="initial_date" value="" placeholder="01/06/1998" id="input-email"
                                 class="form-control" />
                         </div>
 
                      
                          <div class="form-group">
                             <label class="control-label" for="input-email">Data final de aluguel</label>
-                            <input type="text" name="finish_date" value="" placeholder="07/06/1998" id="input-email"
+                            <input type="date" name="finish_date" value="" placeholder="07/06/1998" id="input-email"
                                 class="form-control" />
                         </div>
+
                              <div class="form-group">
                             <label class="control-label" for="input-email">Imagem do carro</label>
-                            <input type="file" name="image_car" value="" class="form-control" />
+                            <input type="text" name="image_car" value="" class="form-control" />
                         </div>
 
                         
