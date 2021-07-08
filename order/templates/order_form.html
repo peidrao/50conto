@@ -9,22 +9,23 @@
 <!-- Checkout Start -->
 <div class="checkout">
     <div class="container-fluid"> 
-        <form action="" method="post">
+  <form action="" method="post">
         {% csrf_token %}
         <div class="row">
-        
-                    <div class="col-lg-8">
+             
+            <div class="col-lg-8">
+             
                 <div class="checkout-inner">
                     <div class="billing-address">
-                        <h2>Billing Address</h2>
+                        <h2>Informações pessoais</h2>
                        
                         <div class="row">
                             <div class="col-md-6">
-                                <label>First Name</label>
+                                <label>Nome</label>
                                 <input class="form-control" name="first_name" value="{{user.first_name}}" type="text" placeholder="First Name">
                             </div>
                             <div class="col-md-6">
-                                <label>Last Name"</label>
+                                <label>Sobrenome</label>
                                 <input class="form-control" name="last_name" value="{{user.last_name}}" type="text" placeholder="Last Name">
                             </div>
                             <div class="col-md-12">
@@ -55,6 +56,30 @@
                         </div>
                     </div>
                 </div>
+                <div class="checkout-inner">
+                    <div class="billing-address">
+                        <h2>Informações de pagamento</h2>
+                       
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label>Número do cartão</label>
+                                <input class="form-control" name="number_cart" max="16" type="text" placeholder="Número cartão">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Expiração do cartão</label>
+                                <input class="form-control" name="expiration_cart" max=5 type="text" placeholder="Data de expiração">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Nome do filiado</label>
+                                <input class="form-control" name="name_cart" type="text" placeholder="Nome">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Código do cartão</label>
+                                <input class="form-control" name="code_cart" type="text" placeholder="Código do cartão">
+                            </div>
+                        </div>
+                    </div>
+                </div>       
             </div>
             <div class="col-lg-4">
                 <div class="checkout-inner">
@@ -63,73 +88,13 @@
                         <p class="sub-total">Sub Total<span>R$ {{total}} </span></p>
                         <h2>Total<span>R$ {{total}} </span></h2>
                     </div>
-
-                    <div class="checkout-payment">
-                        <div class="payment-methods">
-                            <h1>Payment Methods</h1>
-                            <div class="payment-method">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="payment-1" name="payment">
-                                    <label class="custom-control-label" for="payment-1">Paypal</label>
-                                </div>
-                                <div class="payment-content" id="payment-1-show">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="payment-method">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="payment-2" name="payment">
-                                    <label class="custom-control-label" for="payment-2">Payoneer</label>
-                                </div>
-                                <div class="payment-content" id="payment-2-show">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="payment-method">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="payment-3" name="payment">
-                                    <label class="custom-control-label" for="payment-3">Check Payment</label>
-                                </div>
-                                <div class="payment-content" id="payment-3-show">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="payment-method">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="payment-4" name="payment">
-                                    <label class="custom-control-label" for="payment-4">Direct Bank Transfer</label>
-                                </div>
-                                <div class="payment-content" id="payment-4-show">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="payment-method">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="payment-5" name="payment">
-                                    <label class="custom-control-label" for="payment-5">Cash on Delivery</label>
-                                </div>
-                                <div class="payment-content" id="payment-5-show">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="checkout-btn">
-                            <button type="submit">Place Order</button>
-                        </div>
-                    </div>
                 </div>
+                  <div>
+            <button type="submit">Finalizar pedido</button>
             </div>
-        </form>
+            </div> 
+          
+            </form>   
         </div>
     </div>
 </div>
