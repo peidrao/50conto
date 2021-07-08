@@ -68,7 +68,7 @@ class ShopCart(ModelAbs):
       return (self.car.price_day)
 
   def __str__(self) -> str:
-      return self.car.carName
+      return self.car.car_model
 
 
 class OrderCar(ModelAbs):

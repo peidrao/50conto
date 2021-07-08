@@ -1,56 +1,47 @@
-from django import contrib
-from car.models import Car
-from user.models import User
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
+from django.db import connection
+from django.http.response import HttpResponse
 from django.utils.crypto import get_random_string
 from django.shortcuts import HttpResponseRedirect
-from django.contrib import messages
 from django.shortcuts import render
 from django.views import generic
 
-from order.forms import CreateOrderForm, ShopCartForm
 from order.models import Order, OrderCar, ShopCart
+from order.forms import CreateOrderForm
+
+from user.models import User
+from car.models import Car
 
 class AddCartInShopCartView(SuccessMessageMixin, generic.View):
-    form_class = ShopCartForm
-    
     def post(self, request, id):
-        checkproduct = ShopCart.objects.filter(car_id=id)
+        checkproduct = ShopCart.objects.raw(f"SELECT * FROM order_shopcart WHERE car_id = {id}")       
+
         if checkproduct:
             control = 1
-        else:
+        else: 
             control = 0
 
-        form = self.form_class(request.POST)
-        
-        if form.is_valid():
-            if control == 1:
-                data = ShopCart.objects.get(car_id=id)
-                data.quantity += form.cleaned_data['quantity']
-                data.save()
-            else:
-                data = ShopCart()
-                data.user_id = request.user.id
-                data.car_id = id
-                data.quantity = form.cleaned_data['quantity']
-                data.save()
-            messages.success(request, 'Carro adicionado a sua conta')
+        if control == 1:
+            data = ShopCart.objects.raw(f"SELECT * FROM order_shopcart WHERE car_id = {id}")[0]
+            data.quantity += int(request.POST.get('quantity'))
+            data.save()
             return HttpResponseRedirect('/cart')
         else:
-            messages.warning(request, form.errors)
+            data = ShopCart()
+            data.user_id = request.user.id
+            data.car_id = id
+            data.quantity = int(request.POST.get('quantity'))
+            data.save()
+            messages.success(request, 'Carro adicionado a sua conta')
             return HttpResponseRedirect('/cart')
-
-    def form_valid(self, form):
-        form.instance.relates_to = ShopCart.objects.get(pk=self.kwargs.get("pk"))
-        return super().form_valid(form)
-
 
 class CartView(generic.View): 
     model = ShopCart
     template_name = 'cart.html'
 
     def get(self, request, *args, **kwargs):
-        shopcart = ShopCart.objects.filter(user_id=self.request.user.id)
+        shopcart = ShopCart.objects.raw(f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
         total = 0
         for cart in shopcart:
             total = cart.car.price_day * cart.quantity
@@ -64,8 +55,15 @@ class CartView(generic.View):
 
     
 class DeleteCartView(generic.DeleteView):
-    model = ShopCart
-    success_url ="/cart"
+    def post(self, request, *args, **kwargs):
+        try:
+            with connection.cursor() as cursor:
+                id = kwargs['pk']
+                cursor.execute('DELETE FROM order_shopcart WHERE id = %s', [id])
+                return HttpResponseRedirect('/cart')
+        except Exception as error:
+            return HttpResponse(error)
+        
 
 
 class CreateOrderView(generic.CreateView):
