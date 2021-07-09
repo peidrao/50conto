@@ -63,7 +63,7 @@ class SignUpUserView(SuccessMessageMixin, generic.CreateView):
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO user_user VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)", [
                            None, make_password(password), last_login, is_superuser, is_staff, is_active, date_joined,
-                           created_at, updated_at, username, first_name, last_name, type_user, email, status_account
+                           created_at, updated_at, username, first_name, last_name, type_user, status_account, email, 
             ])
             # new_user_id = cursor.lastrowid
             # print("New user id", new_user_id)
@@ -243,11 +243,9 @@ class LesseeProfile(generic.CreateView):
         from_email = request.POST.get('email', '')
         if subject and message and from_email:
             try:
-                send_mail(subject, message, from_email, [user.email])
+                send_mail(subject, message, from_email, [settings.EMAIL_HOST_USER])
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return HttpResponseRedirect('/contact/thanks/')
         else:
-        # In reality we'd use a form class
-        # to get proper validation errors.
             return HttpResponse('Make sure all fields are entered and valid.')
