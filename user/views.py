@@ -1,5 +1,7 @@
+from django.http.response import BadHeaderError
+from api import settings
 from datetime import datetime
-
+from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login as auth_login, logout as logout_func
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.hashers import make_password
@@ -214,3 +216,38 @@ class RateCarUserView(generic.CreateView):
 class DeleteCarView(generic.DeleteView):
     model = Car
     success_url = "/"
+
+
+class LesseeProfile(generic.CreateView):
+    template_name = 'lesse_profile.html'
+
+    def get(self, request, *args, **kwargs):
+        id_username = kwargs['pk']
+        
+        user = User.objects.raw('SELECT * FROM user_user WHERE username = %s', [id_username])[0]
+        cars = Car.objects.raw('SELECT * FROM car_car where user_id = %s', [user.id])
+        
+        context = {
+            'user': user, 
+            'cars': cars
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        id_username = kwargs['pk']
+        
+        user = User.objects.raw('SELECT * FROM user_user WHERE username = %s', [id_username])[0]
+        subject = request.POST.get('subject', '')
+        message = request.POST.get('message', '')
+        from_email = request.POST.get('email', '')
+        if subject and message and from_email:
+            try:
+                send_mail(subject, message, from_email, [user.email])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return HttpResponseRedirect('/contact/thanks/')
+        else:
+        # In reality we'd use a form class
+        # to get proper validation errors.
+            return HttpResponse('Make sure all fields are entered and valid.')

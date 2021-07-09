@@ -39,7 +39,8 @@
                                 </div>
                                 <div class="col-md-7">
                                     <div class="product-content">
-                                        <div class="title"><h2>{{object.carName}}</h2></div>
+                                        <div class="title"><h2>{{object.car_model}}</h2></div>
+                                        <div class="title"><p>Locatário: <a href="{% url 'user:lessee' object.user.username  %}">{{object.user.first_name}}</a></p></div>
                                         <div class="ratting">
                                             <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>
