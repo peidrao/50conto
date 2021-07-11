@@ -1,7 +1,6 @@
 from django.db import models
 from modelAbs import ModelAbs
 from user.models import User
-from car.models import Car
 
 # Create your models here.
 
@@ -44,7 +43,7 @@ class Order(ModelAbs):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    car = models.ForeignKey("car.Car", on_delete=models.CASCADE)
 
     status_order = models.IntegerField(
         choices=STATUS_ORDER, null=True, default=1)
@@ -78,7 +77,7 @@ class Order(ModelAbs):
 
 class ShopCart(ModelAbs):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    car = models.ForeignKey("car.Car", on_delete=models.CASCADE)
     quantity = models.IntegerField(null=False)
 
     @property
@@ -89,13 +88,24 @@ class ShopCart(ModelAbs):
         return self.car.car_model
 
 
-class OrderCar(ModelAbs):
 
+class Review (ModelAbs):
+    STATUS = (
+        (1, 'Não Lida'),
+        (1, 'Aprovado'),
+        (3, 'Reprovado'),
+    )
+
+    car = models.ForeignKey("car.Car", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    quantity = models.IntegerField(null=False, blank=False)
-    price = models.FloatField(null=False, blank=False)
+
+    title = models.CharField(max_length=100, blank=True)
+    subject = models.CharField(max_length=100, blank=True)
+    comment = models.CharField(max_length=255, blank=True)
+
+    rate = models.IntegerField(default=1)
+    status_read = models.IntegerField(choices=STATUS, default=1)
 
     def __str__(self) -> str:
-        return self.car.carName
+        return self.user.first_name

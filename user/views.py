@@ -7,6 +7,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 
+from django.core.exceptions import ValidationError
+
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse_lazy
@@ -16,7 +18,7 @@ from django.views import generic
 from car.forms import RateCarUserForm
 from user.models import User
 from car.models import Car, Review
-from order.models import OrderCar
+from order.models import Order
 
 class LoginView(generic.View):
     template_name = 'login_user.html'
@@ -51,7 +53,6 @@ class SignUpUserView(SuccessMessageMixin, generic.CreateView):
         last_name = request.POST["last_name"]
         type_user = request.POST["type_user"]
         password = request.POST["password1"]
-        status_account = 2
         last_login = datetime.now()
         is_superuser = 0
         is_active = 1
@@ -63,11 +64,9 @@ class SignUpUserView(SuccessMessageMixin, generic.CreateView):
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO user_user VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)", [
                            None, make_password(password), last_login, is_superuser, is_staff, is_active, date_joined,
-                           created_at, updated_at, username, first_name, last_name, type_user, status_account, email, 
+                           created_at, updated_at, username, first_name, last_name, 2, type_user, email, 
             ])
-            # new_user_id = cursor.lastrowid
-            # print("New user id", new_user_id)
-
+ 
             return HttpResponseRedirect(reverse_lazy('home:index'))
 
     def get(self, request, *args, **kwargs):
@@ -130,9 +129,9 @@ class ListMyCarView(generic.ListView):
     context_object_name = "my_car"
 
     def get(self, request, *args, **kwargs):
-        order_car = OrderCar.objects.raw(
+        order_car = Order.objects.raw(
             F'SELECT *  \
-            FROM order_ordercar \
+            FROM order_order \
             WHERE user_id = {request.user.id}'
         )
     
@@ -194,23 +193,28 @@ class RateCarUserView(generic.CreateView):
     template_name = "rate_car.html"
 
     def post(self, request, id):
-        form = self.form_class(request.POST)
-        # import pdb;pdb.set_trace()
-        if form.is_valid():
-            review = form.save(commit=False)
-            car = Car.objects.get(id=id)
-            review.user = request.user
-            review.car = car
-            review.save()
+        try:
+            order = Order.objects.raw('SELECT * FROM order_order WHERE id = %s', [id])[0]
+            car_id = order.car.id
+            user_id = request.user.id
+            title = request.POST.get('title', '')
+            subject = request.POST.get('subject', '')
+            comment = request.POST.get('comment', '')
+            rate = request.POST.get('rate', '')
+            created_at = datetime.now()
+            updated_at = datetime.now()
+
+            with connection.cursor() as cursor:
+                cursor.execute('INSERT INTO order_review VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', [
+                    None, created_at, updated_at, title, subject, comment, rate, 1, car_id, order.id, user_id 
+                ])
 
             messages.success(request, 'Comentário feito com sucesso!')
-            return HttpResponseRedirect('/')
-        else:
-            messages.warning(request, form.errors)
-            return HttpResponseRedirect('/add_new_car')
+            return HttpResponseRedirect(reverse_lazy('user:profile'))
+        
+        except Exception as error:
+            raise ValidationError(error)        
 
-    def form_invalid(self, form):
-        return HttpResponse("form is invalid.. this is just an HttpResponse object")
 
 
 class DeleteCarView(generic.DeleteView):

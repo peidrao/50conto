@@ -10,8 +10,7 @@ from django.shortcuts import render
 from django.core.exceptions import ValidationError
 from django.views import generic
 
-from order.models import Order, OrderCar, ShopCart
-from order.forms import CreateOrderForm
+from order.models import Order, ShopCart
 
 from user.models import User
 from car.models import Car

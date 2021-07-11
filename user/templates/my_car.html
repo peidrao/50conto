@@ -29,7 +29,7 @@
       <td>{{order.created_at|date:"d/m/y"}}</td>
       <td> 
           <button type="button" class="btn btn-primary">
-            <a href="{% url 'user:rate_car' order.car.id %}">Avaliar carro</a>
+            <a href="{% url 'user:rate_car' order.id %}">Avaliar carro</a>
           </button>    
        </td> 
     </tr>
