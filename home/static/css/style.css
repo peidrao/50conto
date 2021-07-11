@@ -9,7 +9,7 @@ body {
 }
 
 a {
-    color: #FF6F61;
+    color: #6D98BA;
 }
 
 a:hover,
@@ -265,7 +265,7 @@ h2 {
 @media (min-width: 768px) {
     .nav,
     .nav .navbar {
-        background: #FF6F61 !important;
+        background: #6D98BA !important;
     }
     
     .nav .navbar-brand {
@@ -331,7 +331,7 @@ h2 {
     height: 40px;
     padding: 0 15px;
     color: #666666;
-    border: 1px solid #FF6F61;
+    border: 1px solid #6D98BA;
     border-radius: 4px;
 }
 
@@ -344,12 +344,12 @@ h2 {
     padding: 0 15px;
     border: none;
     background: none;
-    color: #FF6F61;
+    color: #6D98BA;
     border-radius: 0 2px 2px 0;
 }
 
 .bottom-bar .search button:hover {
-    background: #FF6F61;
+    background: #6D98BA;
     color: #ffffff;
 }
 
@@ -369,7 +369,7 @@ h2 {
 
 .bottom-bar .user .cart span,
 .bottom-bar .user .wishlist span {
-    color: #FF6F61;
+    color: #6D98BA;
     font-size: 15px;
 }
 
@@ -438,12 +438,12 @@ h2 {
     color: #353535;
 }
 .header .navbar a:hover {
-    color: #FF6F61;
+    color: #6D98BA;
 }
 
 
 .header .navbar i {
-    color: #FF6F61;
+    color: #6D98BA;
     width: 20px;
     text-align: center;
     margin-right: 8px;
@@ -473,7 +473,7 @@ h2 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 111, 97, .7);
+    background: rgba(109, 152, 186, .7);
     transition: all 0.3s;
     z-index: 1;
 }
@@ -526,7 +526,7 @@ h2 {
     height: 100%;
     display: flex;
     align-items: center;
-    background: rgba(255, 111, 97, .7);
+    background: rgba(109, 152, 186, .7);
     transition: all 0.3s;
     opacity: 0;
 }
@@ -616,7 +616,7 @@ h2 {
     height: 100%;
     display: flex;
     align-items: center;
-    background: rgba(255, 111, 97, .7);
+    background: rgba(109, 152, 186, .7);
     transition: all 0.3s;
     opacity: 0;
 }
@@ -661,7 +661,7 @@ h2 {
 }
 
 .feature .feature-content i {
-    color: #FF6F61;
+    color: #6D98BA;
     font-size: 60px;
     margin-bottom: 30px;
 }
@@ -691,7 +691,7 @@ h2 {
 }
 
 .product-item:hover .product-title {
-    background: #FF6F61;
+    background: #6D98BA;
 }
 
 .product-item .product-title a,
@@ -708,7 +708,7 @@ h2 {
 
 .product-item .product-title .ratting i {
     font-size: 14px;
-    color: #FF6F61;
+    color: #6D98BA;
 }
 
 .product-item .product-content .price span {
@@ -776,7 +776,7 @@ h2 {
     font-size: 16px;
     text-align: center;
     color: #ffffff;
-    background: #FF6F61;
+    background: #6D98BA;
     border: 1px solid #ffffff;
     border-radius: 4px;
     transition: all .3s;
@@ -794,7 +794,7 @@ h2 {
 .product-item .product-image .product-action a:hover {
     color: #FF6F61;
     background: #ffffff;
-    border: 1px solid #FF6F61;
+    border: 1px solid #6D98BA;
 }
 
 .product-item .product-price {
@@ -804,7 +804,7 @@ h2 {
 }
 
 .product-item:hover .product-price {
-    background: #FF6F61;
+    background: #6D98BA;
 }
 
 .product-item .product-price h3 {

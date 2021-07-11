@@ -63,8 +63,11 @@
       </div>
       <div class="col-md-6">
         <div class="search">
-          <input type="text" placeholder="Search" />
-          <button><i class="fa fa-search"></i></button>
+          <form method="POST" action="{% url 'home:search_car' %}">
+            {% csrf_token %}
+            <input type="text" name="search_car" placeholder="Search" />
+            <button><i class="fa fa-search"></i></button>
+          </form>
         </div>
       </div>
       <div class="col-md-3">
