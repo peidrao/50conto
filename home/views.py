@@ -12,8 +12,14 @@ class HomeListView(generic.ListView):
 
 
 class SearchCarView(generic.TemplateView):
-    template_name = 'search_car.html'
+    template_name = 'pages/search_car.html'
     
     def post(self, request, *args, **kwargs):
         name = request.POST.get('search_car', '')
-        import pdb;pdb.set_trace()
+
+        cars  = Car.objects.raw(f'SELECT * FROM car_car WHERE car_model LIKE "%{name}%"')
+    
+        return render(request, self.template_name, {'cars': cars})
+
+
+        
