@@ -1,13 +1,11 @@
 from datetime import datetime
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.core import exceptions
 from django.db import connection
 from django.http.response import HttpResponse
 from django.utils.crypto import get_random_string
 from django.shortcuts import HttpResponseRedirect
 from django.shortcuts import render
-from django.core.exceptions import ValidationError
 from django.views import generic
 
 from order.models import Order, ShopCart
@@ -18,36 +16,39 @@ from car.models import Car
 
 class AddCartInShopCartView(SuccessMessageMixin, generic.View):
     def post(self, request, id):
-        user = User.objects.raw(f'SELECT * FROM user_user WHERE id = {request.user.id}')[0]
+        try:
+            user = User.objects.raw(f'SELECT * FROM user_user WHERE id = {request.user.id}')[0]
+            if user.type_user == 1:
+                checkproduct = ShopCart.objects.raw(
+                    f"SELECT * FROM order_shopcart WHERE car_id = {id}")
 
-        if user.type_user == 1:
-            checkproduct = ShopCart.objects.raw(
-                f"SELECT * FROM order_shopcart WHERE car_id = {id}")
+                if checkproduct:
+                    control = 1
+                else:
+                    control = 0
 
-            if checkproduct:
-                control = 1
-            else:
-                control = 0
-
-            if control == 1:
-                data = ShopCart.objects.raw(
-                    f"SELECT * FROM order_shopcart WHERE car_id = {id}")[0]
-                data.quantity += int(request.POST.get('quantity'))
-                data.save()
-                return HttpResponseRedirect('/cart')
-            else:
-                data = ShopCart()
-                data.user_id = request.user.id
-                data.car_id = id
-                data.quantity = int(request.POST.get('quantity'))
-                data.save()
-                messages.success(request, 'Carro adicionado a sua conta')
-                return HttpResponseRedirect('/cart')
-        else: 
-            messages.warning(request, 'Você é um locatário!')
+                if control == 1:
+                    data = ShopCart.objects.raw(
+                        f"SELECT * FROM order_shopcart WHERE car_id = {id}")[0]
+                    data.quantity += int(request.POST.get('quantity'))
+                    data.save()
+                    return HttpResponseRedirect('/cart')
+                else:
+                    data = ShopCart()
+                    data.user_id = request.user.id
+                    data.car_id = id
+                    data.quantity = int(request.POST.get('quantity'))
+                    data.save()
+                    # messages.success(request, 'Carro adicionado a sua conta')
+                    return HttpResponseRedirect('/cart')
+            else: 
+                messages.warning(request, 'Você é um locatário!')
+                return HttpResponseRedirect(f'/car_detail/{id}')
+        except Exception as error:
+            messages.warning(request, 'Você precisa cadastrar um conta!')
             return HttpResponseRedirect(f'/car_detail/{id}')
-
-
+            
+            
 class CartView(generic.View):
     model = ShopCart
     template_name = 'cart.html'
@@ -65,6 +66,18 @@ class CartView(generic.View):
         }
 
         return render(request, self.template_name, context)
+    
+    def post(self, request, *args, **kwargs):
+        shopcart = ShopCart.objects.raw(
+            f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
+        total = 0
+        for cart in shopcart:
+            total = cart.car.price_day * cart.quantity
+        if total == 0:
+            messages.warning(request, 'Você precisa de pelo menos um carro adicionado para prosseguir!')
+            return HttpResponseRedirect(f'/cart/')
+        else:
+            return HttpResponseRedirect(f'/order/')
 
 
 class DeleteCartView(generic.DeleteView):
@@ -74,7 +87,8 @@ class DeleteCartView(generic.DeleteView):
                 id = kwargs['pk']
                 cursor.execute(
                     'DELETE FROM order_shopcart WHERE id = %s', [id])
-                return HttpResponseRedirect('/cart')
+            messages.success(request, 'Carro removido do carrinho!')    
+            return HttpResponseRedirect('/cart')
         except Exception as error:
             return HttpResponse(error)
 
@@ -83,7 +97,6 @@ class CreateOrderView(generic.CreateView):
     template_name = "order_form.html"
 
     def get(self, request, *args, **kwargs):
-        # form = self.form_class(request.POST)
         shopcart = ShopCart.objects.filter(user_id=request.user.id)
         user = User.objects.get(id=request.user.id)
         total = 0
@@ -93,7 +106,6 @@ class CreateOrderView(generic.CreateView):
         context = {
             'total': total,
             'user': user,
-            # 'form': form,
             'list': Order
         }
 
@@ -135,5 +147,7 @@ class CreateOrderView(generic.CreateView):
 
 
             return render(request, 'order_completed.html', { 'ordercode': code})
-        except Exception as error:
-            raise ValidationError(error)
+        except Exception:
+            messages.warning(request, 'Ouve algum problema na finalização do aluguel, verifique se falta algum campo ser preenchido!')  
+            return HttpResponseRedirect('/order')
+            

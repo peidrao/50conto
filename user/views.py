@@ -47,7 +47,8 @@ class SignUpUserView(SuccessMessageMixin, generic.CreateView):
     template_name = 'register_user.html'
 
     def post(self, request):
-        username = request.POST["username"]
+
+        username = request.POST["username"] 
         first_name = request.POST["first_name"]
         email = request.POST["email"]
         last_name = request.POST["last_name"]
