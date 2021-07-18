@@ -7,7 +7,9 @@ from django.utils.crypto import get_random_string
 from django.shortcuts import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import generic
+from django.urls import reverse_lazy
 
+from django.utils.dateparse import parse_date
 from order.models import Order, ShopCart
 
 from user.models import User
@@ -19,33 +21,28 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
         try:
             user = User.objects.raw(f'SELECT * FROM user_user WHERE id = {request.user.id}')[0]
             if user.type_user == 1:
-                checkproduct = ShopCart.objects.raw(
-                    f"SELECT * FROM order_shopcart WHERE car_id = {id}")
 
-                if checkproduct:
-                    control = 1
-                else:
-                    control = 0
+                rent_from = request.POST['rent_from']
+                rent_to = request.POST['rent_to']
+                user_id = request.user.id
+                car_id = self.kwargs['id']
 
-                if control == 1:
-                    data = ShopCart.objects.raw(
-                        f"SELECT * FROM order_shopcart WHERE car_id = {id}")[0]
-                    data.quantity += int(request.POST.get('quantity'))
-                    data.save()
-                    return HttpResponseRedirect('/cart')
-                else:
-                    data = ShopCart()
-                    data.user_id = request.user.id
-                    data.car_id = id
-                    data.quantity = int(request.POST.get('quantity'))
-                    data.save()
-                    # messages.success(request, 'Carro adicionado a sua conta')
-                    return HttpResponseRedirect('/cart')
+                created_at = datetime.now()
+                updated_at = datetime.now()
+                quantity = abs((parse_date(rent_to)-parse_date(rent_from)).days)
+
+                with connection.cursor() as cursor:
+                    cursor.execute("INSERT INTO order_shopcart VALUES(%s, %s, %s, %s, %s, %s, %s, %s)",[
+                    None, created_at, updated_at, quantity, car_id, user_id, rent_from, rent_to
+                ])
+                messages.success(request, 'Carro adicinado no carrinho com sucesso!')
+                return HttpResponseRedirect(reverse_lazy('order:cart'))
             else: 
                 messages.warning(request, 'Você é um locatário!')
                 return HttpResponseRedirect(f'/car_detail/{id}')
         except Exception as error:
-            messages.warning(request, 'Você precisa cadastrar um conta!')
+            messages.warning(request, error)
+            # messages.warning(request, 'Você precisa cadastrar um conta!')
             return HttpResponseRedirect(f'/car_detail/{id}')
             
             
@@ -142,9 +139,10 @@ class CreateOrderView(generic.CreateView):
                     user_id, car_id, code_cart, expiration_cart, name_cart, number_cart, status_order
                 ])
 
+                cursor.execute('UPDATE car_car SET status_car = 2 WHERE id = %s', [car_id])
+
                 cursor.execute(
                     'DELETE FROM order_shopcart WHERE user_id = %s', [request.user.id])
-
 
             return render(request, 'order_completed.html', { 'ordercode': code})
         except Exception:

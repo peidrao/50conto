@@ -80,6 +80,9 @@ class ShopCart(ModelAbs):
     car = models.ForeignKey("car.Car", on_delete=models.CASCADE)
     quantity = models.IntegerField(null=False)
 
+    rent_from = models.DateField(null=True)
+    rent_to = models.DateField(null=True)
+
     @property
     def price(self):
         return (self.car.price_day)

@@ -7,8 +7,9 @@ class HomeListView(generic.ListView):
     template_name = 'index.html'
 
     def get(self, request, *args, **kwargs):
-        car = Car.objects.raw("SELECT * FROM car_car WHERE status_car = 1")
+        car = Car.objects.raw("SELECT * FROM car_car WHERE status_car = 1 OR status_car = 2")
         cars_random = Car.objects.raw("SELECT * FROM car_car ORDER BY RANDOM() LIMIT 3;")
+        
 
         context = {
             'object_list':  car,

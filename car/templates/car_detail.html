@@ -1,6 +1,6 @@
 {% extends 'home.html' %}
 
-{% block title %} Início   {% endblock title %}
+{% block title %} {{car.car_model}}   {% endblock title %}
 {% block sidebar  %} {% include 'sidebar.html' %} {% endblock  %}
 {% block navbar  %} {% include 'navbar.html' %} {% endblock  %}
 
@@ -39,7 +39,16 @@
                                 </div>
                                 <div class="col-md-7">
                                     <div class="product-content">
-                                        <div class="title"><h2>{{car.car_model}}</h2></div>
+                                        <div class="title">
+                                            <p>
+                                            <h2>{{car.car_model}}</h2> 
+                                                {% if car.status_car == 1  %}
+                                                    Disponível        
+                                                {% else  %}
+                                                    Alugado por {{ranted.first_name}}
+                                                {% endif %} 
+                                            </p>
+                                        </div>
                                         <div class="title"><p>Locatário: <a href="{% url 'user:lessee' car.user.username  %}">{{car.user.first_name}}</a></p></div>
                                         <div class="ratting">
                                             <i class="fa fa-star"></i>
@@ -56,7 +65,15 @@
                                         <div class="action">
                                         <form action="/add_shopcart/{{car.id}}" method="POST">
                                         {% csrf_token %}
-                                          <input class="input" name="quantity" type="number" value="1" min="1" max="{{car.day}}">
+                                         <div class="form-group">
+                                             <label class="control-label" for="input-email">Data inicial de aluguel</label>
+                                             <input type="date" name="rent_from" id="input-email" class="form-control" />
+                                         </div>
+
+                                         <div class="form-group">
+                                             <label class="control-label" for="input-email">Data final de aluguel</label>
+                                             <input type="date" name="rent_to" id="input-email" class="form-control" />
+                                         </div>
                                         <button type="submit" id="button-cart" class="btn btn-primary btn-lg"><i class="fa fa-shopping-bag"></i>Alugar carro</button>
                                         </form>                                            
                                         </div>
