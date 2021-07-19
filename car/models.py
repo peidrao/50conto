@@ -44,6 +44,16 @@ class Car(ModelAbs):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image_car = models.URLField(null=True, blank=True)
     description = models.TextField(null=False, blank=False)
+
+    carName = models.CharField(max_length = 20,null=True, blank=False)
+    plaque = models.CharField(max_length = 10,null=True, blank=False)
+    car_model = models.CharField(max_length = 20,null=True, blank=False)
+    color = models.CharField(max_length = 20,null=True, blank=False)
+    #alterar para inteiro
+    vehicle_year = models.IntegerField(null=True)
+    mileage = models.CharField(max_length = 20,null=True, blank=False)
+    status_car = models.IntegerField(choices=STATUS_CAR,null=False)
+
     brand = models.PositiveIntegerField(choices=BRAND, null=True, blank=False)
     status_car = models.PositiveIntegerField(choices=STATUS_CAR, null=False)
     color = models.PositiveIntegerField(choices=COLOR, null=False)
@@ -51,6 +61,7 @@ class Car(ModelAbs):
     plaque = models.CharField(unique=True, max_length=10, null=False)
     vehicle_year = models.IntegerField(null=False)
     price_day = models.DecimalField(max_digits=6, decimal_places=2)
+
     initial_date = models.DateField(null=True)
     finish_date = models.DateField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
