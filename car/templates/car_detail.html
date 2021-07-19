@@ -1,21 +1,32 @@
 {% extends 'home.html' %}
 
-{% block title %} Início   {% endblock title %}
+{% block title %} {{car.car_model}}   {% endblock title %}
 {% block sidebar  %} {% include 'sidebar.html' %} {% endblock  %}
 {% block navbar  %} {% include 'navbar.html' %} {% endblock  %}
 
 {% block content  %} 
-
+   
    <!-- Product Detail Start -->
         <div class="product-detail">
             <div class="container-fluid">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
                 <div class="row">
                     <div class="col-lg-8">
                         <div class="product-detail-top">
                             <div class="row align-items-center">
                                 <div class="col-md-5">
                                     <div class="product-slider-single normal-slider">
-                                        <img src="{{object.image_car.url}}" alt="Product Image">
+                                        <img src="{{car.image_car}}" alt="Product Image">
                                         <img src="img/product-3.jpg" alt="Product Image">
                                         <img src="img/product-5.jpg" alt="Product Image">
                                         <img src="img/product-7.jpg" alt="Product Image">
@@ -23,12 +34,22 @@
                                         <img src="img/product-10.jpg" alt="Product Image">
                                     </div>
                                     <div class="product-slider-single-nav normal-slider">
-                                        <div class="slider-nav-img"><img src="img/product-1.jpg" alt="Product Image"></div>
+                                        <div class="slider-nav-img"><img src="{{car.image_car}}" alt="Product Image"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-7">
                                     <div class="product-content">
-                                        <div class="title"><h2>{{object.carName}}</h2></div>
+                                        <div class="title">
+                                            <p>
+                                            <h2>{{car.car_model}}</h2> 
+                                                {% if car.status_car == 1  %}
+                                                    Disponível        
+                                                {% else  %}
+                                                    Alugado por {{ranted.first_name}}
+                                                {% endif %} 
+                                            </p>
+                                        </div>
+                                        <div class="title"><p>Locatário: <a href="{% url 'user:lessee' car.user.username  %}">{{car.user.first_name}}</a></p></div>
                                         <div class="ratting">
                                             <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>
@@ -38,31 +59,23 @@
                                         </div>
                                         <div class="price">
                                             <h4>Preço por dia</h4>
-                                            <p>R$ {{object.price_day}} <span>$149</span></p>
-                                            <p>Dias disponíveis {{object.day}} </p>
+                                            <p>R$ {{car.price_day}} <span>$149</span></p>
+                                            <p>Dias disponíveis {{car.day}} </p>
                                         </div>
                                         <div class="action">
-                                        <form action="/add_shopcart/{{object.id}}" method="POST">
+                                        <form action="/add_shopcart/{{car.id}}" method="POST">
                                         {% csrf_token %}
-                                          <input class="input" name="quantity" type="number" value="1" min="1" max="{{object.day}}">
+                                         <div class="form-group">
+                                             <label class="control-label" for="input-email">Data inicial de aluguel</label>
+                                             <input type="date" name="rent_from" id="input-email" class="form-control" />
+                                         </div>
+
+                                         <div class="form-group">
+                                             <label class="control-label" for="input-email">Data final de aluguel</label>
+                                             <input type="date" name="rent_to" id="input-email" class="form-control" />
+                                         </div>
                                         <button type="submit" id="button-cart" class="btn btn-primary btn-lg"><i class="fa fa-shopping-bag"></i>Alugar carro</button>
-                                        </form>
-
-                                        {% comment %} <form action="/order/addtoshopcart/{{book.id}}" method="POST">
-                                        {% csrf_token %}
-                                        <div class="qty">
-
-                                            <input class="input" name="quantity" type="number" value="1" min="1"
-                                                max="{{ product.amount }}">
-
-                                        </div>
-                                        <button type="submit" id="button-cart" class="btn btn-primary btn-lg">Add to
-                                            Cart</button>
-                                    </form> {% endcomment %}
-                                            
-
-
-                                            
+                                        </form>                                            
                                         </div>
                                     </div>
                                 </div>
@@ -79,7 +92,7 @@
                                         <a class="nav-link" data-toggle="pill" href="#specification">Especificações</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="pill" href="#reviews">Avaliações ({{object.count_reviews}})</a>
+                                        <a class="nav-link" data-toggle="pill" href="#reviews">Avaliações ({{car.count_reviews}})</a>
                                     </li>
                                 </ul>
 
@@ -87,41 +100,40 @@
                                     <div id="description" class="container tab-pane active">
                                         <h4>Descrição do produto</h4>
                                         <p>
-                                           {{object.description}}
+                                           {{car.description}}
                                         </p>
                                     </div>
                                     <div id="specification" class="container tab-pane fade">
                                         <h4>Especificações do veículo</h4>
-                                        <p>{{object.description}}</p>
+                                        <p>{{car.description}}</p>
                                     </div>
                                     <div id="reviews" class="container tab-pane fade">
                                         <div class="reviews-submit">
                                             <h4>Avaliação Geral</h4>
                                             <div class="ratting">
-                                            <i class="{% if object.general_rate < 1 %} fa {% else %} far {% endif %} fa-star"></i>
-                                            <i class="{% if object.general_rate < 2 %} fa {% else %} far {% endif %} fa-star"></i>
-                                            <i class="{% if object.general_rate < 3 %} fa {% else %} far {% endif %} fa-star"></i>
-                                            <i class="{% if object.general_rate < 4 %} fa {% else %} far {% endif %} fa-star"></i>
-                                            <i class="{% if object.general_rate < 5 %} fa {% else %} far {% endif %} fa-star"></i>
-                                                {% comment %} {% if object.general_rate < 1  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %}
-                                                {% if object.general_rate < 2  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %}
-                                                {% if object.general_rate < 3  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %}
-                                                {% if object.general_rate < 4  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %}
-                                                {% if object.general_rate < 5  %} <i class="fa fa-star"></i> {% else %} <i class="far fa-star"></i> {% endif %} {% endcomment %}
+                                                <i class="{% if car.general_rate >= 1 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                <i class="{% if car.general_rate >= 2 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                <i class="{% if car.general_rate >= 3 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                <i class="{% if car.general_rate >= 4 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                <i class="{% if car.general_rate >= 5 %} fa {% else %} far {% endif %} fa-star"></i>
                                             </div>
                                         </div>
                                         <div class="reviews-submitted">
-                                            <div class="reviewer">Phasellus Gravida - <span>01 Jan 2020</span></div>
-                                            <div class="ratting">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                            <p>
-                                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
-                                            </p>
+                                            {% for review in reviews  %}
+                                                <div class="reviewer">
+                                                    <h3>{{review.title}}</h3>
+                                                {{review.user.username}} - <span>{{review.created_at|date:'d/m/Y'}}</span></div>
+                                                <div class="ratting">
+                                                    <i class="{% if review.rate >= 1 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                    <i class="{% if review.rate >= 2 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                    <i class="{% if review.rate >= 3 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                    <i class="{% if review.rate >= 4 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                    <i class="{% if review.rate >= 5 %} fa {% else %} far {% endif %} fa-star"></i>
+                                                </div>
+                                                <p>
+                                                    {{review.comment}}
+                                                </p>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>

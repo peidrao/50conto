@@ -21,15 +21,11 @@
     </tr>
   </thead>
   <tbody>
-    {% for car in object_list %}
+    {% for car in car_list %}
     <tr>
       <th scope="row">{{car.id}}</th>
       <td>
-      {% if car.image_car.url is not None %}
-      <img src="{{car.image_car.url}}" alt="{{car.carName}}" width="250" height="150">
-      {% else %}
-      <p>Sem imagem</p>
-      {% endif %}</td>
+      <img src="{{car.image_car}}" alt="{{car.carName}}" width="250" height="150">
       <td>{{car.carName}}</td>
       <td>{{car.vehicle_year}}</td>
       <td>{{car.color}}</td>
