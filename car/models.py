@@ -20,7 +20,7 @@ class Car(ModelAbs):
     plaque = models.CharField(max_length = 10,null=True, blank=False)
     car_model = models.CharField(max_length = 20,null=True, blank=False)
     color = models.CharField(max_length = 20,null=True, blank=False)
-    #alterar para inteiro
+    #alterar para inteiro, ok
     vehicle_year = models.IntegerField(null=True)
     mileage = models.CharField(max_length = 20,null=True, blank=False)
     status_car = models.IntegerField(choices=STATUS_CAR,null=False)
