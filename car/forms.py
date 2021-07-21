@@ -1,4 +1,3 @@
-from order.models import Order
 from django import forms
 # from django.contrib.auth.models import User
 
@@ -11,3 +10,11 @@ class RateCarUserForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ("subject", "title", "comment", "rate",)
+
+
+class RegisterCarForm(forms.ModelForm):
+
+    class Meta:
+        model = Car
+        fields = ('plaque', 'car_model', 'color', 'brand', 'image_car', 'price_day', 'description',
+                  'vehicle_year', 'status_car', 'initial_date', 'finish_date', )

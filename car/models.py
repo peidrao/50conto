@@ -3,10 +3,6 @@ from modelAbs import ModelAbs
 from user.models import User
 from order.models import  Review
 from django.db import models
-# Create your models here.
-
-
-
 class Car(ModelAbs):
     STATUS_CAR = (
         (1, 'Ativado'),
@@ -42,7 +38,7 @@ class Car(ModelAbs):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    image_car = models.URLField(null=True, blank=True)
+    image_car = models.ImageField(null=True, blank=True)
     description = models.TextField(null=False, blank=False)
     brand = models.PositiveIntegerField(choices=BRAND, null=True, blank=False)
     status_car = models.PositiveIntegerField(choices=STATUS_CAR, null=False)
