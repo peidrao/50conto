@@ -2,6 +2,7 @@ from django.db import models
 from modelAbs import ModelAbs
 from user.models import User
 
+
 # Create your models here.
 
 
@@ -47,7 +48,7 @@ class Order(ModelAbs):
 
     status_order = models.IntegerField(
         choices=STATUS_ORDER, null=True, default=1)
-    
+
     # personal information
     first_name = models.CharField(max_length=50, null=False, blank=False)
     last_name = models.CharField(max_length=50, null=False, blank=False)
@@ -62,7 +63,7 @@ class Order(ModelAbs):
     zip_code = models.CharField('CEP', max_length=11, null=False, blank=False)
 
     code = models.CharField('Código', max_length=11, null=False, blank=False)
-    
+
     total = models.FloatField(null=False)
 
     # payment
@@ -85,14 +86,13 @@ class ShopCart(ModelAbs):
 
     @property
     def price(self):
-        return (self.car.price_day)
+        return self.car.price_day
 
     def __str__(self) -> str:
         return self.car.car_model
 
 
-
-class Review (ModelAbs):
+class Review(ModelAbs):
     STATUS = (
         (1, 'Não Lida'),
         (1, 'Aprovado'),
