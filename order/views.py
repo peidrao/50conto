@@ -42,7 +42,6 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
                 return HttpResponseRedirect(f'/car_detail/{id}')
         except Exception as error:
             messages.warning(request, error)
-            # messages.warning(request, 'Você precisa cadastrar um conta!')
             return HttpResponseRedirect(f'/car_detail/{id}')
             
             

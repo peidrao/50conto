@@ -1,3 +1,4 @@
+from user.forms import RegisterUserForm
 from django.http.response import BadHeaderError
 from api import settings
 from datetime import datetime
@@ -15,7 +16,7 @@ from django.urls import reverse_lazy
 from django.db import connection
 from django.views import generic
 
-from car.forms import RateCarUserForm
+from car.forms import RateCarUserForm, RegisterCarForm
 from user.models import User
 from car.models import Car, Review
 from order.models import Order
@@ -44,31 +45,11 @@ class LoginView(generic.View):
 
 
 class SignUpUserView(SuccessMessageMixin, generic.CreateView):
+    model = User
     template_name = 'register_user.html'
-
-    def post(self, request):
-
-        username = request.POST["username"] 
-        first_name = request.POST["first_name"]
-        email = request.POST["email"]
-        last_name = request.POST["last_name"]
-        type_user = request.POST["type_user"]
-        password = request.POST["password1"]
-        last_login = datetime.now()
-        is_superuser = 0
-        is_active = 1
-        is_staff = 0
-        date_joined = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        created_at = datetime.now()
-        updated_at = datetime.now()
-
-        with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO user_user VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)", [
-                           None, make_password(password), last_login, is_superuser, is_staff, is_active, date_joined,
-                           created_at, updated_at, username, first_name, last_name, 2, type_user, email, 
-            ])
- 
-            return HttpResponseRedirect(reverse_lazy('home:index'))
+    success_url =  reverse_lazy('home:index')
+    form_class = RegisterUserForm
+    success_message = 'Usuário cadastrado com sucesso'
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {'user_list': User})
@@ -91,27 +72,17 @@ class UserCreateCarView(SuccessMessageMixin, generic.CreateView):
         return render(request, self.template_name, {'car_options': Car})
 
     def post(self, request):
-        plaque = request.POST["plaque"]
-        car_model = request.POST["car_model"]
-        color = request.POST["color"]
-        image_car = request.POST["image_car"]
-        price_day = request.POST["price_day"]
-        description = request.POST["description"]
-        vehicle_year = request.POST["vehicle_year"]
-        brand = request.POST["brand"]
-        status_car = request.POST["status_car"]
-        initial_date = request.POST["initial_date"]
-        finish_date = request.POST["finish_date"]
-        created_at = datetime.now()
-        updated_at = datetime.now()
-        user_id = request.user.id
+        form = RegisterCarForm(request.POST, request.FILES)
+        if form.is_valid():
+            car = form.save(commit=False)
+            car.user = request.user
+            car.save()
 
-        with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO car_car VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)", [
-                           None, created_at, updated_at, image_car, description, brand, status_car, color, car_model,
-                           plaque, vehicle_year, price_day, initial_date, finish_date, user_id, ])
-
-            return HttpResponseRedirect(reverse_lazy('home:index'))
+            messages.success(request, 'Carro adicionado a sua conta')
+            return HttpResponseRedirect('/add_new_car')
+        else:
+            messages.warning(request, form.errors)
+            return HttpResponseRedirect('/add_new_car')
 
 
 class ListUserCarsView(generic.ListView):
