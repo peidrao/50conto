@@ -19,6 +19,8 @@ from user.models import User
 from car.models import Car, Review
 from order.models import Order
 
+from user.repository import CreateView as CreateViewUser
+
 
 class LoginView(generic.View):
     template_name = 'login_user.html'
@@ -43,7 +45,7 @@ class LoginView(generic.View):
             return HttpResponseRedirect('/login')
 
 
-class SignUpUserView(SuccessMessageMixin, generic.CreateView):
+class SignUpUserView(SuccessMessageMixin, CreateViewUser):
     model = User
     template_name = 'register_user.html'
     success_url = reverse_lazy('home:index')
