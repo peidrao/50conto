@@ -8,6 +8,11 @@ class ProcessFormView(View):
         if form.is_valid():
             return self.form_valid(form)
         else:
+            error = []
+            for i, j in form.errors.items():
+                error.append(i)
+
+            form.error_messages = {'Erro': f'Erro nos campos {error}'}
             return self.form_invalid(form)
 
     def get(self, request, *args, **kwargs):
@@ -15,9 +20,9 @@ class ProcessFormView(View):
 
 
 class CreateView(ProcessFormView, ModelFormMixin):
-
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
+        self.object = None
         return super().get(request, *args, **kwargs)

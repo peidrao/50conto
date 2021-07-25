@@ -1,17 +1,14 @@
 from user.forms import RegisterUserForm
 from django.http.response import BadHeaderError
 from api import settings
-from datetime import datetime
+
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login as auth_login, logout as logout_func
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 
-from django.core.exceptions import ValidationError
-
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
-from django.urls import reverse_lazy
-from django.db import connection
+from django.urls import reverse_lazy as _
 from django.views import generic
 
 from car.forms import RateCarUserForm, RegisterCarForm, UpdateCarForm
@@ -48,9 +45,13 @@ class LoginView(generic.View):
 class SignUpUserView(SuccessMessageMixin, CreateViewUser):
     model = User
     template_name = 'register_user.html'
-    success_url = reverse_lazy('home:index')
+    success_url = _('home:index')
     form_class = RegisterUserForm
     success_message = 'Usuário cadastrado com sucesso'
+
+    def form_invalid(self, form):
+        messages.error(self.request, form.error_messages)
+        return HttpResponseRedirect(_('user:register'))
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {'user_list': User})
