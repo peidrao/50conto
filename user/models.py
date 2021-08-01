@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from .choices import STATUS_ACCOUNT
 
 from modelAbs import ModelAbs
 
@@ -9,19 +10,6 @@ class User(AbstractUser, ModelAbs):
         (1, 'Cliente'),
         (2, 'Locatário'),
     )
-
-    GENDER_USER = (
-        (1, 'Homem'),
-        (2, 'Mulher'),
-        (3, 'Outro'),
-    )
-
-    STATUS_ACCOUNT = (
-        (1, 'Verificada'),
-        (2, 'Avaliação'),
-        (3, 'Rejeitada'),
-    )
-
     username = models.CharField(
         unique=True, max_length=20, null=True, blank=False)
     email = models.CharField(

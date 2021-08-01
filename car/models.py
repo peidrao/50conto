@@ -1,8 +1,10 @@
 from django.db.models.aggregates import Avg, Count
 from modelAbs import ModelAbs
 from user.models import User
-from order.models import  Review
+from order.models import Review
 from django.db import models
+
+
 class Car(ModelAbs):
     STATUS_CAR = (
         (1, 'Ativado'),
@@ -52,7 +54,6 @@ class Car(ModelAbs):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def __str__(self):
         return f'MODELO: {self.car_model} - COR: {self.color}'
 
@@ -83,6 +84,3 @@ class ImageCar(ModelAbs):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     title = models.CharField(max_length=50, null=False, blank=False)
     image = models.ImageField(upload_to='media')
-
-
-

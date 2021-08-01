@@ -95,7 +95,7 @@ class ShopCart(ModelAbs):
 class Review(ModelAbs):
     STATUS = (
         (1, 'Não Lida'),
-        (1, 'Aprovado'),
+        (2, 'Aprovado'),
         (3, 'Reprovado'),
     )
 

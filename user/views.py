@@ -1,22 +1,19 @@
-from user.forms import RegisterUserForm
-from django.http.response import BadHeaderError
-from api import settings
-
-from django.core.mail import send_mail
+from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as logout_func
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
-
+from django.core.mail import send_mail
+from django.http.response import BadHeaderError
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy as _
 from django.views import generic
 
+from api import settings
 from car.forms import RateCarUserForm, RegisterCarForm, UpdateCarForm
-from user.models import User
 from car.models import Car, Review
 from order.models import Order
-
-from user.repository import CreateView as CreateViewUser
+from user.forms import RegisterUserForm
+from user.models import User
+from user.service import CreateView as CreateViewUser
 
 
 class LoginView(generic.View):
@@ -45,7 +42,7 @@ class LoginView(generic.View):
 class SignUpUserView(SuccessMessageMixin, CreateViewUser):
     model = User
     template_name = 'register_user.html'
-    success_url = _('home:index')
+    success_url = _('user:register')
     form_class = RegisterUserForm
     success_message = 'Usuário cadastrado com sucesso'
 
@@ -135,8 +132,6 @@ class RateCarUserView(generic.CreateView):
     def post(self, request, id):
         form = self.form_class(request.POST)
         if form.is_valid():
-            # import pdb
-            # pdb.set_trace()
             review = form.save(commit=False)
             order = Order.objects.get(id=self.kwargs['id'])
             review.order = order
@@ -160,22 +155,15 @@ class LesseeProfile(generic.CreateView):
     template_name = 'lesse_profile.html'
 
     def get(self, request, *args, **kwargs):
-        id_username = kwargs['pk']
-
-        user = User.objects.raw('SELECT * FROM user_user WHERE username = %s', [id_username])[0]
-        cars = Car.objects.raw('SELECT * FROM car_car where user_id = %s', [user.id])
-
+        user = User.objects.get(username=kwargs['pk'])
+        cars = Car.objects.filter(user_id=user.id)
         context = {
             'user': user,
             'cars': cars
         }
-
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        id_username = kwargs['pk']
-
-        user = User.objects.raw('SELECT * FROM user_user WHERE username = %s', [id_username])[0]
         subject = request.POST.get('subject', '')
         message = request.POST.get('message', '')
         from_email = request.POST.get('email', '')
