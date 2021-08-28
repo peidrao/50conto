@@ -39,7 +39,7 @@ class Car(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    image_car = models.ImageField(null=True, blank=True)
+    image_car = models.TextField(null=True, blank=True)
 
     car_model = models.CharField(max_length=20, null=True, blank=False)
     brand = models.PositiveIntegerField(choices=BRAND, null=True, blank=False)

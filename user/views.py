@@ -5,6 +5,7 @@ from datetime import datetime
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login as auth_login, logout as logout_func
 from django.contrib.messages.views import SuccessMessageMixin
+
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 
@@ -20,6 +21,7 @@ from car.forms import RateCarUserForm, RegisterCarForm
 from user.models import User
 from car.models import Car, Review
 from order.models import Order
+
 
 class LoginView(generic.View):
     template_name = 'login_user.html'
@@ -47,12 +49,33 @@ class LoginView(generic.View):
 class SignUpUserView(SuccessMessageMixin, generic.CreateView):
     model = User
     template_name = 'register_user.html'
-    success_url =  reverse_lazy('home:index')
+    success_url = reverse_lazy('home:index')
     form_class = RegisterUserForm
     success_message = 'Usuário cadastrado com sucesso'
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {'user_list': User})
+
+    def post(self, request, *args, **kwargs):
+        username = request.POST["username"]
+        first_name = request.POST["first_name"]
+        email = request.POST["email"]
+        last_name = request.POST["last_name"]
+        type_user = request.POST["type_user"]
+        password = request.POST["password1"]
+        last_login = datetime.now()
+        is_superuser = 0
+        is_active = 1
+        is_staff = 0
+        date_joined = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO user_user VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", [
+                None, make_password(
+                    password), last_login, is_superuser, is_staff, is_active, date_joined,
+                username, first_name, last_name, 2, type_user, email])
+
+        return HttpResponseRedirect(reverse_lazy('home:index'))
 
 
 class LogoutUserView(generic.View):
@@ -72,17 +95,26 @@ class UserCreateCarView(SuccessMessageMixin, generic.CreateView):
         return render(request, self.template_name, {'car_options': Car})
 
     def post(self, request):
-        form = RegisterCarForm(request.POST, request.FILES)
-        if form.is_valid():
-            car = form.save(commit=False)
-            car.user = request.user
-            car.save()
+        plaque = request.POST["plaque"]
+        car_model = request.POST["car_model"]
+        color = request.POST["color"]
+        image_car = request.POST["image_car"]
+        price_day = request.POST["price_day"]
+        brand = request.POST["brand"]
+        image_car = request.POST["image_car"]
+        status_car = request.POST["status_car"]
+        initial_date = request.POST["initial_date"]
+        finish_date = request.POST["finish_date"]
+        created_at = datetime.now()
+        updated_at = datetime.now()
+        user_id = request.user.id
 
-            messages.success(request, 'Carro adicionado a sua conta')
-            return HttpResponseRedirect('/add_new_car')
-        else:
-            messages.warning(request, form.errors)
-            return HttpResponseRedirect('/add_new_car')
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO car_car VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", [
+                           None, image_car, brand,  status_car, color, car_model, plaque, price_day, initial_date, finish_date,
+                           created_at, updated_at, user_id, ])
+
+            return HttpResponseRedirect(reverse_lazy('home:index'))
 
 
 class ListUserCarsView(generic.ListView):
@@ -106,7 +138,6 @@ class ListMyCarView(generic.ListView):
             FROM order_order \
             WHERE user_id = {request.user.id}'
         )
-    
 
         context = {'order_car': order_car}
         return render(request, self.template_name, context)
@@ -152,9 +183,9 @@ class UpdateCarView(generic.UpdateView):
                                 car_model=%s, color=%s, vehicle_year=%s, status_car=%s, initial_date=%s, \
                                 finish_date=%s, user_id=%s, image_car=%s \
                                 WHERE id = %s", [
-                           updated_at, price_day, description, brand, plaque, car_model, color, vehicle_year, 
+                           updated_at, price_day, description, brand, plaque, car_model, color, vehicle_year,
                            status_car, initial_date, finish_date, user_id, image_car, car_id
-                        ])
+                           ])
 
             return HttpResponseRedirect(reverse_lazy('home:index'))
 
@@ -166,7 +197,8 @@ class RateCarUserView(generic.CreateView):
 
     def post(self, request, id):
         try:
-            order = Order.objects.raw('SELECT * FROM order_order WHERE id = %s', [id])[0]
+            order = Order.objects.raw(
+                'SELECT * FROM order_order WHERE id = %s', [id])[0]
             car_id = order.car.id
             user_id = request.user.id
             title = request.POST.get('title', '')
@@ -178,15 +210,14 @@ class RateCarUserView(generic.CreateView):
 
             with connection.cursor() as cursor:
                 cursor.execute('INSERT INTO order_review VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', [
-                    None, created_at, updated_at, title, subject, comment, rate, 1, car_id, order.id, user_id 
+                    None, created_at, updated_at, title, subject, comment, rate, 1, car_id, order.id, user_id
                 ])
 
             messages.success(request, 'Comentário feito com sucesso!')
             return HttpResponseRedirect(reverse_lazy('user:profile'))
-        
-        except Exception as error:
-            raise ValidationError(error)        
 
+        except Exception as error:
+            raise ValidationError(error)
 
 
 class DeleteCarView(generic.DeleteView):
@@ -199,12 +230,14 @@ class LesseeProfile(generic.CreateView):
 
     def get(self, request, *args, **kwargs):
         id_username = kwargs['pk']
-        
-        user = User.objects.raw('SELECT * FROM user_user WHERE username = %s', [id_username])[0]
-        cars = Car.objects.raw('SELECT * FROM car_car where user_id = %s', [user.id])
-        
+
+        user = User.objects.raw(
+            'SELECT * FROM user_user WHERE username = %s', [id_username])[0]
+        cars = Car.objects.raw(
+            'SELECT * FROM car_car where user_id = %s', [user.id])
+
         context = {
-            'user': user, 
+            'user': user,
             'cars': cars
         }
 
@@ -212,14 +245,16 @@ class LesseeProfile(generic.CreateView):
 
     def post(self, request, *args, **kwargs):
         id_username = kwargs['pk']
-        
-        user = User.objects.raw('SELECT * FROM user_user WHERE username = %s', [id_username])[0]
+
+        user = User.objects.raw(
+            'SELECT * FROM user_user WHERE username = %s', [id_username])[0]
         subject = request.POST.get('subject', '')
         message = request.POST.get('message', '')
         from_email = request.POST.get('email', '')
         if subject and message and from_email:
             try:
-                send_mail(subject, message, from_email, [settings.EMAIL_HOST_USER])
+                send_mail(subject, message, from_email,
+                          [settings.EMAIL_HOST_USER])
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return HttpResponseRedirect('/contact/thanks/')

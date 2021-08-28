@@ -79,7 +79,7 @@ class CreditCard(models.Model):
 
 class Payment(models.Model):
     PAYMENT_TYPE = (
-        (u'1', 'Cartão de Crédito')
+        (u'1', 'Cartão de Crédito'),
         (u'2', 'Espécie')
     )
     credit_card = models.ForeignKey(
