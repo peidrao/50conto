@@ -1,9 +1,10 @@
 from django.db.models.aggregates import Avg, Count
-from modelAbs import ModelAbs
 from user.models import User
-from order.models import  Review
+from order.models import Review
 from django.db import models
-class Car(ModelAbs):
+
+
+class Car(models.Model):
     STATUS_CAR = (
         (1, 'Ativado'),
         (2, 'Desativado'),
@@ -39,30 +40,22 @@ class Car(ModelAbs):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image_car = models.ImageField(null=True, blank=True)
-    description = models.TextField(null=False, blank=False)
 
-    carName = models.CharField(max_length = 20,null=True, blank=False)
-    plaque = models.CharField(max_length = 10,null=True, blank=False)
-    car_model = models.CharField(max_length = 20,null=True, blank=False)
-    color = models.CharField(max_length = 20,null=True, blank=False)
-    #alterar para inteiro
-    vehicle_year = models.IntegerField(null=True)
-    mileage = models.CharField(max_length = 20,null=True, blank=False)
-    status_car = models.IntegerField(choices=STATUS_CAR,null=False)
-
-    brand = models.PositiveIntegerField(choices=BRAND, null=True, blank=False)
-    status_car = models.PositiveIntegerField(choices=STATUS_CAR, null=False)
-    color = models.PositiveIntegerField(choices=COLOR, null=False)
     car_model = models.CharField(max_length=20, null=True, blank=False)
-    plaque = models.CharField(unique=True, max_length=10, null=False)
-    vehicle_year = models.IntegerField(null=False)
+    brand = models.PositiveIntegerField(choices=BRAND, null=True, blank=False)
+    plaque = models.CharField(max_length=10, null=True, blank=False)
+    status_car = models.PositiveIntegerField(choices=STATUS_CAR, null=False)
+    color = models.CharField(max_length=20, null=True, blank=False)
+
+    color = models.PositiveIntegerField(choices=COLOR, null=False)
+
     price_day = models.DecimalField(max_digits=6, decimal_places=2)
 
     initial_date = models.DateField(null=True)
     finish_date = models.DateField(null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
     def __str__(self):
         return f'MODELO: {self.car_model} - COR: {self.color}'
@@ -88,12 +81,3 @@ class Car(ModelAbs):
         if reviews['count'] is not None:
             ctn = int(reviews['count'])
         return ctn
-
-
-class ImageCar(ModelAbs):
-    car = models.ForeignKey(Car, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50, null=False, blank=False)
-    image = models.ImageField(upload_to='media')
-
-
-

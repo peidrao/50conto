@@ -1,10 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from modelAbs import ModelAbs
 
 
-class User(AbstractUser, ModelAbs):
+class User(AbstractUser, models.Model):
     TYPE_USER = (
         (1, 'Cliente'),
         (2, 'Locatário'),

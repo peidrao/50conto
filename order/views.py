@@ -29,22 +29,22 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
 
                 created_at = datetime.now()
                 updated_at = datetime.now()
-                quantity = abs((parse_date(rent_to)-parse_date(rent_from)).days)
+
 
                 with connection.cursor() as cursor:
                     cursor.execute("INSERT INTO order_shopcart VALUES(%s, %s, %s, %s, %s, %s, %s, %s)",[
-                    None, created_at, updated_at, quantity, car_id, user_id, rent_from, rent_to
+                    None, created_at, updated_at, car_id, user_id, rent_from, rent_to
                 ])
                 messages.success(request, 'Carro adicinado no carrinho com sucesso!')
                 return HttpResponseRedirect(reverse_lazy('order:cart'))
-            else: 
+            else:
                 messages.warning(request, 'Você é um locatário!')
                 return HttpResponseRedirect(f'/car_detail/{id}')
         except Exception as error:
             messages.warning(request, error)
             return HttpResponseRedirect(f'/car_detail/{id}')
-            
-            
+
+
 class CartView(generic.View):
     model = ShopCart
     template_name = 'cart.html'
@@ -62,7 +62,7 @@ class CartView(generic.View):
         }
 
         return render(request, self.template_name, context)
-    
+
     def post(self, request, *args, **kwargs):
         shopcart = ShopCart.objects.raw(
             f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
@@ -83,7 +83,7 @@ class DeleteCartView(generic.DeleteView):
                 id = kwargs['pk']
                 cursor.execute(
                     'DELETE FROM order_shopcart WHERE id = %s', [id])
-            messages.success(request, 'Carro removido do carrinho!')    
+            messages.success(request, 'Carro removido do carrinho!')
             return HttpResponseRedirect('/cart')
         except Exception as error:
             return HttpResponse(error)
@@ -110,7 +110,7 @@ class CreateOrderView(generic.CreateView):
     def post(self, request, *args, **kwargs):
         try:
             shopcart = ShopCart.objects.get(user_id=request.user.id)
-            
+
 
             user_id = request.user.id
             car_id = shopcart.car.id
@@ -134,7 +134,7 @@ class CreateOrderView(generic.CreateView):
 
             with connection.cursor() as cursor:
                 cursor.execute("INSERT INTO order_order VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s, %s, %s, %s, %s)",[
-                    None, created_at, updated_at, total_price, first_name, last_name, city, state_order, address, number, zip_code, code, 
+                    None, created_at, updated_at, total_price, first_name, last_name, city, state_order, address, number, zip_code, code,
                     user_id, car_id, code_cart, expiration_cart, name_cart, number_cart, status_order
                 ])
 
@@ -145,6 +145,6 @@ class CreateOrderView(generic.CreateView):
 
             return render(request, 'order_completed.html', { 'ordercode': code})
         except Exception:
-            messages.warning(request, 'Ouve algum problema na finalização do aluguel, verifique se falta algum campo ser preenchido!')  
+            messages.warning(request, 'Ouve algum problema na finalização do aluguel, verifique se falta algum campo ser preenchido!')
             return HttpResponseRedirect('/order')
-            
+

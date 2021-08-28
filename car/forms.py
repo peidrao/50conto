@@ -4,8 +4,6 @@ from django import forms
 from car.models import Car, Review
 
 
-
-
 class RateCarUserForm(forms.ModelForm):
     class Meta:
         model = Review
@@ -16,5 +14,5 @@ class RegisterCarForm(forms.ModelForm):
 
     class Meta:
         model = Car
-        fields = ('plaque', 'car_model', 'color', 'brand', 'image_car', 'price_day', 'description',
-                  'vehicle_year', 'status_car', 'initial_date', 'finish_date', )
+        fields = ('plaque', 'car_model', 'color', 'brand', 'image_car', 'price_day',
+                 'status_car', 'initial_date', 'finish_date')
