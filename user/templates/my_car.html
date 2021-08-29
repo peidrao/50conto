@@ -1,47 +1,44 @@
 {% extends 'home.html' %}
-{% block title %} Perfil -  {{request.user.first_name}}   {% endblock title %}
-{% block sidebar %} {% include 'sidebar.html' %} {% endblock %} 
-{% block navbar %} {% include 'navbar.html' %} {% endblock %} 
-{% block content  %}
+{% block title %} Perfil - {{request.user.first_name}} {% endblock title %}
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
+{% block content %}
 <div class="container">
-    <div class="row">
-        {% comment %} {% block menu  %} {% include 'partials/menu.html' %} {% endblock  %} {% endcomment %}
+  <div class="row">
+    {% comment %} {% block menu %} {% include 'partials/menu.html' %} {% endblock %} {% endcomment %}
 
-      <table class="table">
-  <thead class="thead-dark">
-    <tr>
-    <th scope="col">ID</th>
-     <th scope="col">Imagem</th>
-      <th scope="col">Dias de aluguel</th>
-      <th scope="col">Data do aluguel</th>
-      <th scope="col">Avaliar carro</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for order in order_car %}
-    <tr>
-      <th scope="row">{{order.id}}</th>
-      <td>
-      
-      <img src="{{order.car.image_car}}" alt="{{order.car.carName}}" width="250" height="150">
-      
-      <td>{{order.quantity}}</td>
-      <td>{{order.created_at|date:"d/m/y"}}</td>
-      <td> 
-          <button type="button" class="btn btn-primary">
-            <a href="{% url 'user:rate_car' order.id %}">Avaliar carro</a>
-          </button>    
-       </td> 
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Imagem</th>
+          <th scope="col">Dias de aluguel</th>
+          <th scope="col">Data do aluguel</th>
+          <th scope="col">Avaliar carro</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in order_car %}
+        <tr>
+          <th scope="row">{{order.id}}</th>
+          <td>
 
-    </div>
+            <img src="{{order.car.image_car}}" alt="{{order.car.carName}}" width="250" height="150">
+
+          <td>{{order.quantity}}</td>
+          <td>{{order.created_at|date:"d/m/y"}}</td>
+          <td>
+            <button type="button" class="btn btn-primary">
+              <a href="{% url 'user:rate_car' order.id %}">Avaliar carro</a>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
 </div>
 
-{% endblock  %}
+{% endblock %}
 {% block footer %} {% include 'footer.html' %} {% endblock %}
-
-
-

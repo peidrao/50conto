@@ -37,7 +37,7 @@ class ShopCart(models.Model):
 
     @property
     def day_quantity(self):
-        return abs((parse_date(self.rent_to)-parse_date(self.rent_from)).days)
+        return abs(((self.rent_to)-(self.rent_from)).days)
 
     @property
     def price(self):
@@ -74,7 +74,7 @@ class CreditCard(models.Model):
     name = models.CharField(max_length=25)
 
     def __str__(self) -> str:
-        return 'Nome do titular: {self.name}'
+        return f'Nome do titular: {self.name}'
 
 
 class Payment(models.Model):
@@ -85,3 +85,6 @@ class Payment(models.Model):
     credit_card = models.ForeignKey(
         CreditCard, on_delete=models.CASCADE, blank=True, null=True)
     payment_type = models.CharField(choices=PAYMENT_TYPE, max_length=100)
+
+    def __str__(self) -> str:
+        return f'Nome do titular: {self.payment_type}'

@@ -1,0 +1,41 @@
+<div class="row product-detail-bottom">
+    <div class="col-lg-12">
+        <ul class="nav nav-pills nav-justified">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#reviews">Avaliações ({{car.count_reviews}})</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- <div id="reviews" class="container tab-pane fade">
+                <div class="reviews-submit">
+                    <h4>Avaliação Geral</h4>
+                    <div class="ratting">
+                        <i class="{% if car.general_rate >= 1 %} fa {% else %} far {% endif %} fa-star"></i>
+                        <i class="{% if car.general_rate >= 2 %} fa {% else %} far {% endif %} fa-star"></i>
+                        <i class="{% if car.general_rate >= 3 %} fa {% else %} far {% endif %} fa-star"></i>
+                        <i class="{% if car.general_rate >= 4 %} fa {% else %} far {% endif %} fa-star"></i>
+                        <i class="{% if car.general_rate >= 5 %} fa {% else %} far {% endif %} fa-star"></i>
+                    </div>
+                </div>
+                <div class="reviews-submitted">
+                    {% for review in reviews  %}
+                        <div class="reviewer">
+                            <h3>{{review.title}}</h3>
+                        {{review.user.username}} - <span>{{review.created_at|date:'d/m/Y'}}</span></div>
+                        <div class="ratting">
+                            <i class="{% if review.rate >= 1 %} fa {% else %} far {% endif %} fa-star"></i>
+                            <i class="{% if review.rate >= 2 %} fa {% else %} far {% endif %} fa-star"></i>
+                            <i class="{% if review.rate >= 3 %} fa {% else %} far {% endif %} fa-star"></i>
+                            <i class="{% if review.rate >= 4 %} fa {% else %} far {% endif %} fa-star"></i>
+                            <i class="{% if review.rate >= 5 %} fa {% else %} far {% endif %} fa-star"></i>
+                        </div>
+                        <p>
+                            {{review.comment}}
+                        </p>
+                    {% endfor %}
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>

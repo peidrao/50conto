@@ -10,7 +10,7 @@ from django.views import generic
 from django.urls import reverse_lazy
 
 from django.utils.dateparse import parse_date
-from order.models import Order, ShopCart
+from order.models import CreditCard, Order, Payment, ShopCart
 
 from user.models import User
 from car.models import Car
@@ -19,6 +19,7 @@ from car.models import Car
 class AddCartInShopCartView(SuccessMessageMixin, generic.View):
     def post(self, request, id):
         try:
+            # import pdb ; pdb.set_trace()
             user = User.objects.raw(f'SELECT * FROM user_user WHERE id = {request.user.id}')[0]
             if user.type_user == 1:
 
@@ -27,16 +28,13 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
                 user_id = request.user.id
                 car_id = self.kwargs['id']
 
-                created_at = datetime.now()
-                updated_at = datetime.now()
-
-
                 with connection.cursor() as cursor:
-                    cursor.execute("INSERT INTO order_shopcart VALUES(%s, %s, %s, %s, %s, %s, %s, %s)",[
-                    None, created_at, updated_at, car_id, user_id, rent_from, rent_to
+                    cursor.execute("INSERT INTO order_shopcart VALUES(%s, %s, %s, %s, %s)",[
+                    None, rent_from, rent_to, car_id, user_id
                 ])
                 messages.success(request, 'Carro adicinado no carrinho com sucesso!')
                 return HttpResponseRedirect(reverse_lazy('order:cart'))
+
             else:
                 messages.warning(request, 'Você é um locatário!')
                 return HttpResponseRedirect(f'/car_detail/{id}')
@@ -52,9 +50,11 @@ class CartView(generic.View):
     def get(self, request, *args, **kwargs):
         shopcart = ShopCart.objects.raw(
             f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
+
         total = 0
         for cart in shopcart:
-            total = cart.car.price_day * cart.quantity
+            total = cart.car.price_day * cart.day_quantity
+
 
         context = {
             'shopcart': shopcart,
@@ -68,7 +68,7 @@ class CartView(generic.View):
             f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
         total = 0
         for cart in shopcart:
-            total = cart.car.price_day * cart.quantity
+            total = cart.car.price_day * cart.day_quantity
         if total == 0:
             messages.warning(request, 'Você precisa de pelo menos um carro adicionado para prosseguir!')
             return HttpResponseRedirect(f'/cart/')
@@ -93,11 +93,14 @@ class CreateOrderView(generic.CreateView):
     template_name = "order_form.html"
 
     def get(self, request, *args, **kwargs):
-        shopcart = ShopCart.objects.filter(user_id=request.user.id)
-        user = User.objects.get(id=request.user.id)
+        shopcart = ShopCart.objects.raw(
+            f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
+
+        user = User.objects.raw(f'SELECT id FROM user_user WHERE id = {request.user.id}')
+
         total = 0
         for cart in shopcart:
-            total = cart.car.price_day * cart.quantity
+            total = cart.car.price_day * cart.day_quantity
 
         context = {
             'total': total,
@@ -108,42 +111,45 @@ class CreateOrderView(generic.CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        # import pdb ; pdb.set_trace()
         try:
             shopcart = ShopCart.objects.get(user_id=request.user.id)
+            # shopcart = ShopCart.objects.raw(f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
 
-
-            user_id = request.user.id
-            car_id = shopcart.car.id
             status_order = 1
-            total_price = shopcart.car.price_day * shopcart.quantity
-            created_at = datetime.now()
-            updated_at = datetime.now()
-            code = get_random_string(5).upper()
-            state_order = request.POST['state_order']
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
-            city = request.POST['city']
-            address = request.POST['address']
-            number = request.POST['number']
-            zip_code = request.POST['zip_code']
+            payment_type = 1
+            total_price = shopcart.price * shopcart.day_quantity
+            # TODO: Criar cartão
+            # TODO: Criar forma de pagamento
+            # TODO: Criar pedido
 
-            number_cart = request.POST['number_cart']
-            name_cart = request.POST['name_cart']
-            code_cart = request.POST['code_cart']
-            expiration_cart = request.POST['expiration_cart']
+            number_cart = request.POST['cart_number']
+            name_cart = request.POST['name']
+            code_cart = request.POST['security_number']
+            expiration_cart = request.POST['expirate_date']
 
-            with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO order_order VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s, %s, %s, %s, %s)",[
-                    None, created_at, updated_at, total_price, first_name, last_name, city, state_order, address, number, zip_code, code,
-                    user_id, car_id, code_cart, expiration_cart, name_cart, number_cart, status_order
+            # import pdb ; pdb.set_trace()
+
+            with connection.cursor() as credit_card:
+                credit_card.execute("INSERT INTO order_creditcard VALUES(%s, %s, %s, %s, %s)",[
+                    None, expiration_cart, number_cart, code_cart, name_cart
                 ])
 
-                cursor.execute('UPDATE car_car SET status_car = 2 WHERE id = %s', [car_id])
+            last_cart = CreditCard.objects.last()
 
-                cursor.execute(
-                    'DELETE FROM order_shopcart WHERE user_id = %s', [request.user.id])
+            with connection.cursor() as payment:
+                payment.execute("INSERT INTO order_payment VALUES(%s, %s, %s)",[
+                    None, payment_type, last_cart.id
+                ])
 
-            return render(request, 'order_completed.html', { 'ordercode': code})
+            last_payment = Payment.objects.last()
+
+            with connection.cursor() as order:
+                order.execute("INSERT INTO order_order VALUES(%s, %s, %s, %s, %s)",[
+                    None, status_order, total_price, shopcart.id, last_payment.id
+                ])
+
+            return render(request, 'order_completed.html', {})
         except Exception:
             messages.warning(request, 'Ouve algum problema na finalização do aluguel, verifique se falta algum campo ser preenchido!')
             return HttpResponseRedirect('/order')

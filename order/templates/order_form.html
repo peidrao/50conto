@@ -1,113 +1,74 @@
 {% extends 'home.html' %}
 
-{% block title %} Finalização   {% endblock title %}
-{% block sidebar  %} {% include 'sidebar.html' %} {% endblock  %}
-{% block navbar  %} {% include 'navbar.html' %} {% endblock  %}
+{% block title %} Finalização {% endblock title %}
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
 
 
-{% block content  %} 
+{% block content %}
 <!-- Checkout Start -->
 <div class="checkout">
-    <div class="container-fluid"> 
-      {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endfor %}
-            {% endif %}
-  <form action="" method="post">
-        {% csrf_token %}
-        <div class="row">
-             
-            <div class="col-lg-8">
-             
-                <div class="checkout-inner">
-                    <div class="billing-address">
-                        <h2>Informações pessoais</h2>
-                       
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Nome</label>
-                                <input class="form-control" name="first_name" value="{{user.first_name}}" type="text" placeholder="First Name">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Sobrenome</label>
-                                <input class="form-control" name="last_name" value="{{user.last_name}}" type="text" placeholder="Last Name">
-                            </div>
-                            <div class="col-md-12">
-                                <label>Address</label>
-                                <input class="form-control" name="address" type="text" placeholder="Address">
-                            </div>
-                            <div class="col-md-6">
-                                <label>City</label>
-                                <input class="form-control" name="city" type="text" placeholder="City">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label>Número</label>
-                                <input class="form-control" name="number" type="text" placeholder="City">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Estado</label>
-                                <select name="state_order"  class="form-control">
-                               {% for val, name in list.STATE_ORDER %}
-                                    <option value="{{val}}">{{name}}</option>
-                                {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label>ZIP Code</label>
-                                <input class="form-control" name="zip_code" type="text" placeholder="ZIP Code">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="checkout-inner">
-                    <div class="billing-address">
-                        <h2>Informações de pagamento</h2>
-                       
-                        <div class="row">
-                            <div class="col-md-8">
-                                <label>Número do cartão</label>
-                                <input class="form-control" name="number_cart" max="16" type="text" placeholder="Número cartão">
-                            </div>
-                            <div class="col-md-4">
-                                <label>Expiração do cartão</label>
-                                <input class="form-control" name="expiration_cart" max=5 type="text" placeholder="Data de expiração">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Nome do filiado</label>
-                                <input class="form-control" name="name_cart" type="text" placeholder="Nome">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Código do cartão</label>
-                                <input class="form-control" name="code_cart" type="text" placeholder="Código do cartão">
-                            </div>
-                        </div>
-                    </div>
-                </div>       
-            </div>
-            <div class="col-lg-4">
-                <div class="checkout-inner">
-                    <div class="checkout-summary">
-                        <h1>Carrinho</h1>
-                        <p class="sub-total">Sub Total<span>R$ {{total}} </span></p>
-                        <h2>Total<span>R$ {{total}} </span></h2>
-                    </div>
-                </div>
-                  <div>
-            <button type="submit">Finalizar pedido</button>
-            </div>
-            </div> 
-          
-            </form>   
+    <div class="container-fluid">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+        {% endfor %}
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-8">
+                    <div class="checkout-inner">
+                        <div class="billing-address">
+                            <h2>Informações de pagamento</h2>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label>Número do cartão</label>
+                                    <input class="form-control" name="cart_number" max="16" type="text"
+                                        placeholder="Número cartão">
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Expiração do cartão</label>
+                                    <input class="form-control" name="expirate_date" max=5 type="text"
+                                        placeholder="Data de expiração">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Nome do filiado</label>
+                                    <input class="form-control" name="name" type="text" placeholder="Nome">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Código do cartão</label>
+                                    <input class="form-control" name="security_number" type="text"
+                                        placeholder="Código do cartão">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="checkout-inner">
+                        <div class="checkout-summary">
+                            <h1>Carrinho</h1>
+                            <p class="sub-total">Sub Total<span>R$ {{total}} </span></p>
+                            <h2>Total<span>R$ {{total}} </span></h2>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit">Finalizar pedido</button>
+                    </div>
+                </div>
+
+        </form>
     </div>
 </div>
+</div>
 
-{% endblock  %}
-{% block footer  %} {% include 'footer.html' %} {% endblock  %}
+{% endblock %}
+{% block footer %} {% include 'footer.html' %} {% endblock %}

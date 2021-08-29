@@ -99,7 +99,7 @@ class UserCreateCarView(SuccessMessageMixin, generic.CreateView):
         car_model = request.POST["car_model"]
         color = request.POST["color"]
         image_car = request.POST["image_car"]
-        price_day = request.POST["price_day"]
+        price_day = request.POST["price_day"].replace(',', '.')
         brand = request.POST["brand"]
         image_car = request.POST["image_car"]
         status_car = request.POST["status_car"]
@@ -114,7 +114,7 @@ class UserCreateCarView(SuccessMessageMixin, generic.CreateView):
                            None, image_car, brand,  status_car, color, car_model, plaque, price_day, initial_date, finish_date,
                            created_at, updated_at, user_id, ])
 
-            return HttpResponseRedirect(reverse_lazy('home:index'))
+            return HttpResponseRedirect(reverse_lazy('user:list_cars', args=[user_id]))
 
 
 class ListUserCarsView(generic.ListView):
@@ -166,9 +166,7 @@ class UpdateCarView(generic.UpdateView):
         car_model = request.POST["car_model"]
         color = request.POST["color"]
         image_car = request.POST["image_car"]
-        price_day = request.POST["price_day"]
-        description = request.POST["description"]
-        vehicle_year = request.POST["vehicle_year"]
+        price_day = request.POST["price_day"].replace(',', '.')
         brand = request.POST["brand"]
         status_car = request.POST["status_car"]
         initial_date = request.POST["initial_date"]
@@ -179,17 +177,18 @@ class UpdateCarView(generic.UpdateView):
 
         with connection.cursor() as cursor:
             cursor.execute("UPDATE car_car \
-                            SET updated_at=%s, price_day=%s, description=%s, brand=%s, plaque=%s, \
-                                car_model=%s, color=%s, vehicle_year=%s, status_car=%s, initial_date=%s, \
+                            SET updated_at=%s, price_day=%s, brand=%s, plaque=%s, \
+                                car_model=%s, color=%s, status_car=%s, initial_date=%s, \
                                 finish_date=%s, user_id=%s, image_car=%s \
                                 WHERE id = %s", [
-                           updated_at, price_day, description, brand, plaque, car_model, color, vehicle_year,
+                           updated_at, price_day, brand, plaque, car_model, color,
                            status_car, initial_date, finish_date, user_id, image_car, car_id
                            ])
 
-            return HttpResponseRedirect(reverse_lazy('home:index'))
+            return HttpResponseRedirect(reverse_lazy('user:profile'))
 
 
+# TODO: Ver depois que arrumar pedido.
 class RateCarUserView(generic.CreateView):
     model = Review
     form_class = RateCarUserForm
@@ -223,6 +222,12 @@ class RateCarUserView(generic.CreateView):
 class DeleteCarView(generic.DeleteView):
     model = Car
     success_url = "/"
+
+    def post(self, request, pk):
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM car_car WHERE id= %s", [pk])
+
+        return HttpResponseRedirect(reverse_lazy('user:profile'))
 
 
 class LesseeProfile(generic.CreateView):

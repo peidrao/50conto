@@ -34,7 +34,7 @@
                             </thead>
 
                             <tbody class="align-middle">
-                              {% for  cart in shopcart  %}
+                              {% for cart in shopcart  %}
                                 <tr>
                                     <td>
                                         <div class="img">
@@ -46,7 +46,7 @@
                                     <td>
                                         <div class="qty">
 
-                                            <input type="text" value="{{cart.quantity}}">
+                                            <input type="text" value="{{cart.day_quantity}}">
 
                                         </div>
                                     </td>
@@ -57,9 +57,9 @@
                                         </td>
                                     </form>
 
-                                    
+
                                 </tr>
-                              
+
                               {% endfor %}
                             </tbody>
                         </table>

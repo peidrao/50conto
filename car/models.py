@@ -61,7 +61,7 @@ class Car(models.Model):
         return f'MODELO: {self.car_model} - COR: {self.color}'
 
     @property
-    def day(self):
+    def days(self):
         return abs((self.finish_date - self.initial_date).days)
 
     @property
