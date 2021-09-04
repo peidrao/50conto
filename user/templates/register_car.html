@@ -17,82 +17,83 @@
         {% endif %}
 
         <div class="row">
-
-            <div id="content" class="col-sm-9">
+            <div id="content" class="col-sm-12">
                 <h1 class="title">Adicionar carro</h1>
-                <div class="row">
-                    <div class="col-sm-9">
-                        <h2 class="subtitle">Novo carro</h2>
-                        <p><strong>Adicione os dados do carro a ser alugado</strong></p>
-                        <form action="" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label class="control-label" for="input-email">Placa do veículo</label>
-                                <input type="text" name="plaque" value="" placeholder="Placa do veículo"
-                                    id="input-email" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="input-email">Modelo</label>
-                                <input type="text" name="car_model" value="" placeholder="Modelo do carro"
-                                    id="input-email" class="form-control" />
-                            </div>
 
 
-                            <div class="form-group">
-                                <label class="control-label" for="input-email">Preço por dia</label>
-                                <input type="textarea" name="price_day" value="" placeholder="Preço por dia"
-                                    id="input-email" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Status do carro</label>
-                                <select name="status_car" class="form-control">
-                                    {% for val, name in car_options.STATUS_CAR %}
-                                    <option value="{{val}}">{{name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                <h2 class="subtitle">Novo carro</h2>
+                <p><strong>Adicione os dados do carro a ser alugado</strong></p>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
 
-                            <div class="form-group">
-                                <label>Cor do carro</label>
-                                <select name="color" class="form-control">
-                                    {% for val, name in car_options.COLOR %}
-                                    <option value="{{val}}">{{name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label" for="input-email">Placa do veículo</label>
+                            <input type="text" name="plaque" value="" placeholder="Placa do veículo" id="input-email"
+                                class="form-control" />
+                        </div>
 
-                            <div class="form-group">
-                                <label>Marca do carro</label>
-                                <select name="brand" class="form-control">
-                                    {% for val, name in car_options.BRAND %}
-                                    <option value="{{val}}">{{name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label" for="input-email">Modelo</label>
+                            <input type="text" name="car_model" value="" placeholder="Modelo do carro" id="input-email"
+                                class="form-control" />
+                        </div>
 
+                        <div class="form-group col-sm-3">
+                            <label class="control-label" for="input-email">Preço por dia</label>
+                            <input type="textarea" name="price_day" value="" placeholder="Preço por dia"
+                                id="input-email" class="form-control" />
+                        </div>
 
-                            <div class="form-group">
-                                <label class="control-label" for="input-email">Data inicial de aluguel</label>
-                                <input type="date" name="initial_date" value="" placeholder="01/06/1998"
-                                    id="input-email" class="form-control" />
-                            </div>
+                        <div class="form-group col-sm-3">
+                            <label>Status do carro</label>
+                            <select name="status_car" class="form-control">
+                                {% for val, name in car_options.STATUS_CAR %}
+                                <option value="{{val}}">{{name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
+                        <div class="form-group col-sm-3">
+                            <label>Cor do carro</label>
+                            <select name="color" class="form-control">
+                                {% for val, name in car_options.COLOR %}
+                                <option value="{{val}}">{{name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                            <div class="form-group">
-                                <label class="control-label" for="input-email">Data final de aluguel</label>
-                                <input type="date" name="finish_date" value="" placeholder="07/06/1998" id="input-email"
-                                    class="form-control" />
-                            </div>
+                        <div class="form-group col-sm-3">
+                            <label>Marca do carro</label>
+                            <select name="brand" class="form-control">
+                                {% for val, name in car_options.BRAND %}
+                                <option value="{{val}}">{{name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="input-email">Imagem do carro</label>
-                        <input type="text" name="image_car" value="" class="form-control" />
+                        <div class="form-group col-sm-6">
+                            <label class="control-label" for="input-email">Data inicial de aluguel</label>
+                            <input type="date" name="initial_date" value="" placeholder="01/06/1998" id="input-email"
+                                class="form-control" />
+                        </div>
+
+                        <div class="form-group group col-sm-6">
+                            <label class="control-label" for="input-email">Data final de aluguel</label>
+                            <input type="date" name="finish_date" value="" placeholder="07/06/1998" id="input-email"
+                                class="form-control" />
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label" for="input-email">Imagem do carro (URL da imagem)</label>
+                            <input type="text" name="image_car" value="" class="form-control" />
+                        </div>
                     </div>
 
                     <input type="submit" value="Criar carro" class="btn btn-primary btn-lg btn-block" />
-                    </form>
-                </div>
+                    <br>
+                </form>
+
             </div>
         </div>
     </div>

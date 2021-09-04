@@ -18,8 +18,7 @@ from car.models import Car
 
 class AddCartInShopCartView(SuccessMessageMixin, generic.View):
     def post(self, request, id):
-        try:
-            # import pdb ; pdb.set_trace()
+        if not request.user.is_anonymous:
             user = User.objects.raw(f'SELECT * FROM user_user WHERE id = {request.user.id}')[0]
             if user.type_user == 1:
 
@@ -28,9 +27,10 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
                 user_id = request.user.id
                 car_id = self.kwargs['id']
 
+
                 with connection.cursor() as cursor:
-                    cursor.execute("INSERT INTO order_shopcart VALUES(%s, %s, %s, %s, %s)",[
-                    None, rent_from, rent_to, car_id, user_id
+                    cursor.execute("INSERT INTO order_shopcart VALUES(%s, %s, %s, %s, %s, %s)",[
+                    None, rent_from, rent_to, car_id, user_id, True
                 ])
                 messages.success(request, 'Carro adicinado no carrinho com sucesso!')
                 return HttpResponseRedirect(reverse_lazy('order:cart'))
@@ -38,9 +38,11 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
             else:
                 messages.warning(request, 'Você é um locatário!')
                 return HttpResponseRedirect(f'/car_detail/{id}')
-        except Exception as error:
-            messages.warning(request, error)
+        else:
+            messages.warning(request, 'Você precisa logar em uma conta!')
             return HttpResponseRedirect(f'/car_detail/{id}')
+
+
 
 
 class CartView(generic.View):
@@ -49,7 +51,7 @@ class CartView(generic.View):
 
     def get(self, request, *args, **kwargs):
         shopcart = ShopCart.objects.raw(
-            f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
+            f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id} and ativo = 1')
 
         total = 0
         for cart in shopcart:
@@ -64,6 +66,7 @@ class CartView(generic.View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+
         shopcart = ShopCart.objects.raw(
             f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
         total = 0
@@ -79,6 +82,7 @@ class CartView(generic.View):
 class DeleteCartView(generic.DeleteView):
     def post(self, request, *args, **kwargs):
         try:
+
             with connection.cursor() as cursor:
                 id = kwargs['pk']
                 cursor.execute(
@@ -94,7 +98,8 @@ class CreateOrderView(generic.CreateView):
 
     def get(self, request, *args, **kwargs):
         shopcart = ShopCart.objects.raw(
-            f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
+            f'SELECT * from order_shopcart ORDER by id DESC  LIMIT 1')
+
 
         user = User.objects.raw(f'SELECT id FROM user_user WHERE id = {request.user.id}')
 
@@ -111,24 +116,23 @@ class CreateOrderView(generic.CreateView):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        # import pdb ; pdb.set_trace()
+
         try:
-            shopcart = ShopCart.objects.get(user_id=request.user.id)
-            # shopcart = ShopCart.objects.raw(f'SELECT * FROM order_shopcart WHERE user_id = {request.user.id}')
+            # TODO: Pegar o último objeto criado por cartão de crédito
+            # TODO: Pegar o último objeto criado por método de pagamento
+            # TODO: Criar o pedido
+            shopcart = ShopCart.objects.filter(user_id=request.user.id).order_by('-id')[0]
+            # SELECT * from order_shopcart ORDER by id DESC  LIMIT 1
 
             status_order = 1
             payment_type = 1
             total_price = shopcart.price * shopcart.day_quantity
-            # TODO: Criar cartão
-            # TODO: Criar forma de pagamento
-            # TODO: Criar pedido
 
             number_cart = request.POST['cart_number']
             name_cart = request.POST['name']
             code_cart = request.POST['security_number']
             expiration_cart = request.POST['expirate_date']
 
-            # import pdb ; pdb.set_trace()
 
             with connection.cursor() as credit_card:
                 credit_card.execute("INSERT INTO order_creditcard VALUES(%s, %s, %s, %s, %s)",[
@@ -145,12 +149,18 @@ class CreateOrderView(generic.CreateView):
             last_payment = Payment.objects.last()
 
             with connection.cursor() as order:
-                order.execute("INSERT INTO order_order VALUES(%s, %s, %s, %s, %s)",[
-                    None, status_order, total_price, shopcart.id, last_payment.id
+                order.execute("INSERT INTO order_order VALUES(%s, %s, %s, %s, %s, %s)",[
+                    None, status_order, total_price, shopcart.id, last_payment.id, request.user.id
+                ])
+
+            with connection.cursor() as cursor_update:
+                cursor_update.execute("UPDATE order_shopcart SET ativo = 0 WHERE id = %s",[
+                    shopcart.id
                 ])
 
             return render(request, 'order_completed.html', {})
-        except Exception:
+        except Exception as error:
+            import pdb ; pdb.set_trace()
             messages.warning(request, 'Ouve algum problema na finalização do aluguel, verifique se falta algum campo ser preenchido!')
             return HttpResponseRedirect('/order')
 

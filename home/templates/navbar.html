@@ -18,15 +18,13 @@
       >
         <div class="navbar-nav mr-auto">
           <a href="{% url 'home:index' %}" class="nav-item nav-link active">Início</a>
-          <a href="product-list.html" class="nav-item nav-link">Products</a>
-          <a href="product-detail.html" class="nav-item nav-link"
-            >Product Detail</a>
+          <a href="{% url 'home:all_cars' %}" class="nav-item nav-link active">Todos os carros</a>
           {% if request.user.type_user != 2 %}
                 <a href="{% url 'order:cart' %}" class="nav-item nav-link">Carrinho</a>
           <a href="{% url 'order:create_order' %}" class="nav-item nav-link">Checkout</a>
           {% comment %} {% else %} {% endcomment %}
           {% endif %}
-      
+
         </div>
         <div class="navbar-nav ml-auto">
           <div class="nav-item dropdown">

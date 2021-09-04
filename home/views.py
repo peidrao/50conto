@@ -7,7 +7,7 @@ class HomeListView(generic.ListView):
     template_name = 'index.html'
 
     def get(self, request, *args, **kwargs):
-        car = Car.objects.raw("SELECT * FROM car_car WHERE status_car = 1 OR status_car = 2")
+        car = Car.objects.raw("SELECT * FROM car_car WHERE status_car = 1 OR status_car = 2 LIMIT 6")
         cars_random = Car.objects.raw("SELECT * FROM car_car ORDER BY RAND() LIMIT 3;")
 
 
@@ -17,6 +17,22 @@ class HomeListView(generic.ListView):
         }
 
         return render(request, self.template_name, context)
+
+
+class AllCarListView(generic.ListView):
+    template_name = 'pages/all_cars.html'
+
+    def get(self, request, *args, **kwargs):
+        car = Car.objects.raw("SELECT * FROM car_car WHERE status_car = 1 OR status_car = 2")
+
+        context = {
+            'cars':  car,
+        }
+
+        return render(request, self.template_name, context)
+
+
+
 
 
 class SearchCarView(generic.TemplateView):

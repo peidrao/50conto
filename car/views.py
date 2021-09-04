@@ -12,11 +12,8 @@ class CarDetailView(DetailView):
     def get(self, request, *args, **kwargs):
 
         car = Car.objects.raw('SELECT * FROM car_car WHERE id = %s', [kwargs['pk']])[0]
-        # reviews = Review.objects.raw('SELECT * FROM order_review WHERE car_id = %s', [kwargs['pk']])
-        # import pdb ; pdb.set_trace()
         context = {
-            'car': car,
-            # 'reviews': reviews
+            'car': car
         }
 
         return render(request, self.template_name, context)

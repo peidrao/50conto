@@ -133,11 +133,7 @@ class ListMyCarView(generic.ListView):
     context_object_name = "my_car"
 
     def get(self, request, *args, **kwargs):
-        order_car = Order.objects.raw(
-            F'SELECT *  \
-            FROM order_order \
-            WHERE user_id = {request.user.id}'
-        )
+        order_car = Order.objects.raw(f'SELECT * from order_shopcart o WHERE EXISTS ( SELECT * FROM order_order WHERE user_id = {request.user.id})')
 
         context = {'order_car': order_car}
         return render(request, self.template_name, context)

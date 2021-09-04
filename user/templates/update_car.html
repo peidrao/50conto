@@ -14,33 +14,34 @@
 
         <div class="row">
             <!--Middle Part Start-->
-            <div id="content" class="col-sm-9">
+            <div id="content" class="col-sm-12">
                 <h1 class="title">Atualizar carro</h1>
                 <div class="row">
-                    <div class="col-sm-9">
+                    <div class="col-sm-12">
                         <p><strong>Atualize os dados sobre seu carro</strong></p>
                         <form action="" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
-                            <div class="form-group">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
                                 <label class="control-label" for="input-email">Placa do veículo</label>
                                 <input type="text" name="plaque" value="{{car_update.plaque}}" id="input-email"
                                     class="form-control" />
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group col-sm-6">
                                 <label class="control-label" for="input-email">Modelo</label>
                                 <input type="text" name="car_model" value="{{car_update.car_model}}" id="input-email"
                                     class="form-control" />
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="form-group col-sm-3">
                                 <label class="control-label" for="input-email">Preço por dia</label>
                                 <input type="textarea" name="price_day" value="{{car_update.price_day}}"
                                     placeholder="Preço por dia" id="input-email" class="form-control" />
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group col-sm-3">
                                 <label>Status do carro</label>
                                 <select name="status_car" class="form-control">
                                     {% for val, name in car_update.STATUS_CAR %}
@@ -49,7 +50,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group col-sm-3">
                                 <label>Cor do carro</label>
                                 <select name="color" class="form-control">
                                     {% for val, name in car_update.COLOR %}
@@ -58,7 +59,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group col-sm-3">
                                 <label>Marca do carro</label>
                                 <select name="brand" class="form-control">
                                     {% for val, name in car_update.BRAND %}
@@ -67,22 +68,23 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group col-sm-4">
                                 <label class="control-label" for="input-email">Data inicial de aluguel</label>
                                 <input type="date" name="initial_date" value="{{car_update.initial_date}}"
                                     id="input-email" class="form-control" />
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="form-group col-sm-4">
                                 <label class="control-label" for="input-email">Data final de aluguel</label>
                                 <input type="date" name="finish_date" value="{{car_update.finish_date}}"
                                     id="input-email" class="form-control" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-sm-12">
                                 <label class="control-label" for="input-email">Imagem do carro</label>
                                 <input type="text" name="image_car" value="{{car_update.image_car}}"
                                     class="form-control" />
+                            </div>
                             </div>
 
 

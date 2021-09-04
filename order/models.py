@@ -18,6 +18,7 @@ class Order(models.Model):
         "order.Payment", on_delete=models.CASCADE, null=False, blank=False)
     cart = models.ForeignKey(
         "order.ShopCart", on_delete=models.CASCADE, null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     status_order = models.IntegerField(
         choices=STATUS_ORDER, null=True, default=1)
@@ -34,6 +35,8 @@ class ShopCart(models.Model):
 
     rent_from = models.DateField(null=True)
     rent_to = models.DateField(null=True)
+
+    ativo = models.BooleanField(default=True)
 
     @property
     def day_quantity(self):

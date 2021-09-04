@@ -1,0 +1,43 @@
+{% extends 'home.html' %}
+
+{% block title %} Início   {% endblock title %}
+{% block sidebar  %} {% include 'sidebar.html' %} {% endblock  %}
+{% block navbar  %} {% include 'navbar.html' %} {% endblock  %}
+
+{% block content  %}
+
+<div class="container">
+    <div class="row">
+        {% for car in cars  %}
+        <div class="col-lg-3">
+            <div class="product-item">
+              <div class="product-title">
+                <a href="{% url 'car:car_detail' car.id %}">{{car.car_model}}</a>
+              </div>
+              <div class="product-image">
+                <a href="product-detail.html">
+                  <img src="{{car.image_car}}" width="250" height="180" alt="Product Image" />
+                </a>
+
+                <div class="product-action">
+
+
+                  <a href="{% url 'car:car_detail' car.id %}"><i class="fa fa-search"></i></a>
+                </div>
+              </div>
+              <div class="product-price">
+                <h3><span>R$</span>{{car.price_day}}</h3>
+                <a class="btn" href="{% url 'car:car_detail' car.id %}"
+                  ><i class="fa fa-shopping-cart"></i>Alugue</a
+                >
+              </div>
+              <br>
+            </div>
+          </div>
+          <br>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock  %}
+{% block footer  %} {% include 'footer.html' %} {% endblock  %}
