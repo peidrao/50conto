@@ -12,7 +12,6 @@
         <tr>
           <th scope="col">ID</th>
           <th scope="col">Imagem</th>
-          <th scope="col">Dias de aluguel</th>
           <th scope="col">Data do aluguel</th>
           <th scope="col">Avaliar carro</th>
         </tr>
@@ -23,9 +22,8 @@
           <th scope="row">{{order.id}}</th>
           <td>
 
-            <img src="{{order.car_id.image_car}}" alt="{{order.car.carName}}" width="250" height="150">
+            <img src="{{order.image_car}}" alt="{{order.car_model}}" width="250" height="150">
 
-          <td>{{order.quantity}}</td>
           <td>{{order.created_at|date:"d/m/y"}}</td>
           <td>
             <button type="button" class="btn btn-primary">

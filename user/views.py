@@ -133,7 +133,7 @@ class ListMyCarView(generic.ListView):
     context_object_name = "my_car"
 
     def get(self, request, *args, **kwargs):
-        order_car = Order.objects.raw(f'SELECT * from order_shopcart o WHERE EXISTS ( SELECT * FROM order_order WHERE user_id = {request.user.id})')
+        order_car = Order.objects.raw(f'SELECT * FROM order_shopcart o, car_car c where o.user_id = {request.user.id} and o.car_id = c.id')
 
         context = {'order_car': order_car}
         return render(request, self.template_name, context)
@@ -194,18 +194,15 @@ class RateCarUserView(generic.CreateView):
         try:
             order = Order.objects.raw(
                 'SELECT * FROM order_order WHERE id = %s', [id])[0]
-            car_id = order.car.id
-            user_id = request.user.id
             title = request.POST.get('title', '')
             subject = request.POST.get('subject', '')
             comment = request.POST.get('comment', '')
             rate = request.POST.get('rate', '')
-            created_at = datetime.now()
-            updated_at = datetime.now()
+
 
             with connection.cursor() as cursor:
-                cursor.execute('INSERT INTO order_review VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', [
-                    None, created_at, updated_at, title, subject, comment, rate, 1, car_id, order.id, user_id
+                cursor.execute('INSERT INTO order_review VALUES(%s, %s, %s, %s, %s, %s, %s)', [
+                    None, title, subject, comment, rate, 1, order.id
                 ])
 
             messages.success(request, 'Comentário feito com sucesso!')

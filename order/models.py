@@ -50,7 +50,7 @@ class ShopCart(models.Model):
         return self.car.car_model
 
 
-class Review (models.Model):
+class Review(models.Model):
     STATUS = (
         (1, 'Não Lida'),
         (1, 'Aprovado'),
