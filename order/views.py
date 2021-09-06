@@ -1,9 +1,9 @@
-from datetime import datetime
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.db import connection
 from django.http.response import HttpResponse
-from django.utils.crypto import get_random_string
+
 from django.shortcuts import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import generic
@@ -118,9 +118,7 @@ class CreateOrderView(generic.CreateView):
     def post(self, request, *args, **kwargs):
 
         try:
-            # TODO: Pegar o último objeto criado por cartão de crédito
-            # TODO: Pegar o último objeto criado por método de pagamento
-            # TODO: Criar o pedido
+
             shopcart = ShopCart.objects.filter(user_id=request.user.id).order_by('-id')[0]
             # SELECT * from order_shopcart ORDER by id DESC  LIMIT 1
 
