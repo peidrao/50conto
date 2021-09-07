@@ -46,9 +46,7 @@
     </nav>
   </div>
 </div>
-<!-- Nav Bar End -->
 
-<!-- Bottom Bar Start -->
 <div class="bottom-bar">
   <div class="container-fluid">
     <div class="row align-items-center">
@@ -59,7 +57,7 @@
           </a>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-9">
         <div class="search">
           <form method="POST" action="{% url 'home:search_car' %}">
             {% csrf_token %}
@@ -68,18 +66,7 @@
           </form>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="user">
-          <a href="" class="btn wishlist">
-            <i class="fa fa-heart"></i>
-            <span>(0)</span>
-          </a>
-          <a href="{% url 'order:cart' %}" class="btn cart">
-            <i class="fa fa-shopping-cart"></i>
-            <span>(0)</span>
-          </a>
-        </div>
-      </div>
+
     </div>
   </div>
 </div>

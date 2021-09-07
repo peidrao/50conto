@@ -7,21 +7,13 @@
     </thead>
     <tbody>
       <tr>
-        <th scope="row">Status da conta: {% if request.user.status_account == 1  %} Verificada  
+        <th scope="row">Status da conta: {% if request.user.status_account == 1  %} Verificada
                                         {% elif request.user.status_account == 2 %} Em avaliação
                                         {% else %} Rejeitada
                                         {% endif %}
         </th>
       </tr>
-      <tr>
-        <th scope="row"><a href="/user/orders">Minhas compras</a></th>
-      </tr>
-      <tr>
-        <th scope="row"><a href="/user/request">pedidos</a></th>
-      </tr>
-      <tr>
-        <th scope="row"><a href="/user/order_book">Status </a></th>
-      </tr>
+
       {% if request.user.status_account == 1  %}
           {% if request.user.type_user == 2 %}
           <tr>
@@ -29,12 +21,12 @@
           </tr>
           <tr>
           <th scope="row"><a href="/list_cars/{{request.user.id}}">Carros cadastrados</a></th>
-          </tr>   
+          </tr>
           {% elif request.user.type_user == 1 %}
           <tr>
           <th scope="row"><a href="{% url 'user:my_car' request.user.id %}">Carros Alugados</a></th>
-          </tr>   
-        {% endif %}      
+          </tr>
+        {% endif %}
       {% endif %}
 
     </tbody>

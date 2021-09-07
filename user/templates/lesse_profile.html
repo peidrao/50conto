@@ -1,7 +1,7 @@
 {% extends 'home.html' %}
 {% block title %} Perfil -  {{request.user.first_name}}   {% endblock title %}
-{% block sidebar %} {% include 'sidebar.html' %} {% endblock %} 
-{% block navbar %} {% include 'navbar.html' %} {% endblock %} 
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
 {% block content  %}
 <div class="container">
 <h3 class="text-center">{{user.first_name}}, {{user.last_name}}</h3>
@@ -11,21 +11,15 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="dashboard-nav" data-toggle="pill" href="#dashboard-tab" role="tab"><i class="fa fa-tachometer-alt"></i>Dashboard</a>
+
                             <a class="nav-link" id="orders-nav" data-toggle="pill" href="#orders-tab" role="tab"><i class="fa fa-car"></i>Carros do locatário</a>
                             <a class="nav-link" id="address-nav" data-toggle="pill" href="#address-tab" role="tab"><i class="fa fa-map-marker-alt"></i>Informações pessoais</a>
-                            <a class="nav-link" id="contact-nav" data-toggle="pill" href="#contact-tab" role="tab"><i class="fa fa-envelope"></i>Contato</a>
                         </div>
                     </div>
                     <div class="col-md-9">
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
-                                <h4>Dashboard</h4>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In condimentum quam ac mi viverra dictum. In efficitur ipsum diam, at dignissim lorem tempor in. Vivamus tempor hendrerit finibus. Nulla tristique viverra nisl, sit amet bibendum ante suscipit non. Praesent in faucibus tellus, sed gravida lacus. Vivamus eu diam eros. Aliquam et sapien eget arcu rhoncus scelerisque.
-                                </p> 
-                            </div>
-                            <div class="tab-pane fade" id="orders-tab" role="tabpanel" aria-labelledby="orders-nav">
+
+                            <div class="tab-pane fade show active" id="orders-tab" role="tabpanel" aria-labelledby="orders-nav">
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead class="thead-dark">
@@ -43,12 +37,12 @@
                                                 <td><img src="{{car.image_car}}" width="150px" height="150px" alt=""></td>
                                                 <td>{{car.car_model}}</td>
                                                 <td>R$ {{car.price_day}}</td>
-                                                <td> 
+                                                <td>
                                                     {% if car.status_car == 1  %} Disponível
                                                     {% elif car.status_car == 2 %} Indisponível
                                                     {% else %} Alugado
-                                                
-                                                    {% endif %} 
+
+                                                    {% endif %}
                                                 </td>
                                                 <td><button class="btn"><a href="{% url 'car:car_detail' car.id %}">Carro</a></button></td>
                                             </tr>
@@ -60,45 +54,12 @@
                             <div class="tab-pane fade" id="address-tab" role="tabpanel" aria-labelledby="address-nav">
                                 <h4>Informações pessoais</h4>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <h5>Informações do usuário</h5>
+                                    <div class="col-md-12">
                                         <p>Entrada na plataforma: {{user.date_joined|date:'d/m/Y'}}</p>
                                         <p>Usuário: {{user.username}} </p>
                                         <p>E-mail: {{user.email}} </p>
                                     </div>
-                                    <div class="col-md-6">
-                                        <h5>Shipping Address</h5>
-                                        <p>123 Shipping Street, Los Angeles, CA</p>
-                                        <p>Mobile: 012-345-6789</p>
-                                        <button class="btn">Edit Address</button>
-                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="contact-tab" role="tabpanel" aria-labelledby="contact-nav">
-                                <h4>Entre em contato com o vendedor</h4>
-                                <p>
-                                    Envie uma mensagem para ele, tirando alguma dúvida que ache importante ser esclarecida
-                                </p>
-                                 
-                                <div class="row">
-                                <form action="" method="POST">
-                                 {% csrf_token %}
-                                        <div class="col-md-12">
-                                            <input class="form-control" name="subject" type="text" placeholder="Assunto">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <input class="form-control" name="email" type="text" placeholder="E-mail">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <input class="form-control" name="message" type="textarea" placeholder="Texto">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button type="submit" class="btn">Enviar</button>
-                                        </div>
-                                     </form>
-                                </div>
-                               
                             </div>
                         </div>
                     </div>
