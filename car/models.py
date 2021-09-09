@@ -2,6 +2,7 @@ from django.db.models.aggregates import Avg, Count
 from user.models import User
 from order.models import Review
 from django.db import models
+from datetime import date
 
 
 class Car(models.Model):
@@ -45,7 +46,6 @@ class Car(models.Model):
     brand = models.PositiveIntegerField(choices=BRAND, null=True, blank=False)
     plaque = models.CharField(max_length=10, null=True, blank=False)
     status_car = models.PositiveIntegerField(choices=STATUS_CAR, null=False)
-    color = models.CharField(max_length=20, null=True, blank=False)
 
     color = models.PositiveIntegerField(choices=COLOR, null=False)
 
@@ -81,3 +81,7 @@ class Car(models.Model):
         if reviews['count'] is not None:
             ctn = int(reviews['count'])
         return ctn
+
+    @property
+    def is_past_due(self):
+        return  date.today() > self.finish_date

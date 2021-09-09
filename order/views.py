@@ -26,6 +26,10 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
                 rent_to = request.POST['rent_to']
                 user_id = request.user.id
                 car_id = self.kwargs['id']
+                car_object = Car.objects.raw('SELECT * FROM car_car WHERE id = %s', [car_id])
+
+                # if rent_from < car_object.columns
+                # import pdb ; pdb.set_trace()
 
 
                 with connection.cursor() as cursor:
@@ -118,9 +122,9 @@ class CreateOrderView(generic.CreateView):
     def post(self, request, *args, **kwargs):
 
         try:
+            # shopcart = ShopCart.objects.filter(user_id=request.user.id).order_by('-id')[0]
+            shopcart = ShopCart.objects.raw('SELECT * FROM order_shopcart shop  WHERE shop.user_id = %s ORDER BY shop.id DESC LIMIT 1', [request.user.id])[0]
 
-            shopcart = ShopCart.objects.filter(user_id=request.user.id).order_by('-id')[0]
-            # SELECT * from order_shopcart ORDER by id DESC  LIMIT 1
 
             status_order = 1
             payment_type = 1
@@ -137,14 +141,17 @@ class CreateOrderView(generic.CreateView):
                     None, expiration_cart, number_cart, code_cart, name_cart
                 ])
 
-                last_cart = CreditCard.objects.last()
+            # last_card = CreditCard.objects.last()
+            last_card = CreditCard.objects.raw('SELECT * FROM order_creditcard credit_card ORDER BY credit_card.id DESC LIMIT 1')[0]
+
 
             with connection.cursor() as payment:
                 payment.execute("INSERT INTO order_payment VALUES(%s, %s, %s)",[
-                    None, payment_type, last_cart.id
+                    None, payment_type, last_card.id
                 ])
 
-            last_payment = Payment.objects.last()
+            # last_payment = Payment.objects.last()
+            last_payment = Payment.objects.raw('SELECT * FROM order_payment payment ORDER BY payment.id DESC LIMIT 1')[0]
 
             with connection.cursor() as order:
                 order.execute("INSERT INTO order_order VALUES(%s, %s, %s, %s, %s, %s)",[
@@ -158,7 +165,6 @@ class CreateOrderView(generic.CreateView):
 
             return render(request, 'order_completed.html', {})
         except Exception as error:
-            import pdb ; pdb.set_trace()
             messages.warning(request, 'Ouve algum problema na finalização do aluguel, verifique se falta algum campo ser preenchido!')
             return HttpResponseRedirect('/order')
 

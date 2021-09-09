@@ -1,79 +1,113 @@
 {% extends 'home.html' %}
 
-{% block title %} {{car.car_model}}   {% endblock title %}
-{% block sidebar  %} {% include 'sidebar.html' %} {% endblock  %}
-{% block navbar  %} {% include 'navbar.html' %} {% endblock  %}
+{% block title %} {{car.car_model}} {% endblock title %}
+{% block sidebar %} {% include 'sidebar.html' %} {% endblock %}
+{% block navbar %} {% include 'navbar.html' %} {% endblock %}
 
-{% block content  %}
+{% block content %}
 
-   <!-- Product Detail Start -->
-        <div class="product-detail">
-            <div class="container-fluid">
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endfor %}
-            {% endif %}
+<!-- Product Detail Start -->
+<div class="product-detail">
+    <div class="container-fluid">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
 
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="product-detail-top">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <div class="product-slider-single normal-slider">
-                                        <img src="{{car.image_car}}" alt="Product Image">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="product-content">
-                                        <div class="title">
-                                            <p>
-                                            <h2>{{car.car_model}}</h2>
-                                                {% if car.status_car == 1  %}
-                                                    Disponível
-                                                {% else  %}
-                                                    Alugado
-                                                {% endif %}
-                                            </p>
-                                        </div>
-                                        <div class="title"><p>Locatário: <a href="{% url 'user:lessee' car.user.username  %}">{{car.user.first_name}}</a></p></div>
-                                        <div class="price">
-                                            <h4>Preço por dia</h4>
-                                            <p>R$ {{car.price_day}} <span>$149</span></p>
-                                            <p>Dias disponíveis {{car.days}} </p>
-                                        </div>
-                                        <div class="action">
-                                        <form action="/add_shopcart/{{car.id}}" method="POST">
-                                        {% csrf_token %}
-                                         <div class="form-group">
-                                             <label class="control-label" for="input-email">Data inicial de aluguel</label>
-                                             <input type="date" name="rent_from" id="input-email" class="form-control" />
-                                         </div>
-
-                                         <div class="form-group">
-                                             <label class="control-label" for="input-email">Data final de aluguel</label>
-                                             <input type="date" name="rent_to" id="input-email" class="form-control" />
-                                         </div>
-                                        <button type="submit" id="button-cart" class="btn btn-primary btn-lg"><i class="fa fa-shopping-bag"></i>Alugar carro</button>
-                                        </form>
-                                        </div>
-                                    </div>
-                                </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="product-detail-top">
+                    <div class="row align-items-center">
+                        <div class="col-md-7">
+                            <div class="product-slider-single normal-slider">
+                                <img src="{{car.image_car}}" alt="Product Image">
                             </div>
                         </div>
+                        <div class="col-md-5">
+                            <div class="product-content">
+                                <div class="title">
+                                    <p>
+                                    <h2>{{car.car_model}}</h2>
+                                    {% if car.status_car == 1 %}
+                                    Disponível
+                                    {% else %}
+                                    Alugado
+                                    {% endif %}
+                                    </p>
+                                </div>
+                                <div class="title">
+                                    <p>Locatário: <a
+                                            href="{% url 'user:lessee' car.user.username  %}">{{car.user.first_name}}</a>
+                                    </p>
+                                </div>
+                                <div class="price">
+                                    <h4>Preço por dia</h4>
+                                    <p>R$ {{car.price_day}} <span>$149</span></p>
+                                </div>
 
-                     <!-- Review vai ser colocado aqui -->
+                                {% if car.is_past_due %}
+                                <div class="price">
+                                    No momento o carro não está disponível
+                                </div>
+                                {% else %}
+                                {% if car.days > 0 %}
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Disponível de</th>
+                                            <th scope="col">Disponível até</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">{{car.initial_date}}</th>
+                                            <th>{{car.finish_date}}</th>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                                {% endif %}
+
+
+                                <div class="action">
+                                    <form action="/add_shopcart/{{car.id}}" method="POST">
+                                        {% csrf_token %}
+                                        {% if car.days > 0 %}
+                                        <div class="price"> </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="input-email">Data inicial de
+                                                aluguel</label>
+                                            <input type="date" name="rent_from" id="input-email" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="input-email">Data final de aluguel</label>
+                                            <input type="date" name="rent_to" id="input-email" class="form-control" />
+                                        </div>
+                                        <button type="submit" id="button-cart" class="btn btn-primary btn-lg"><i
+                                                class="fa fa-shopping-bag"></i>Alugar carro</button>
+
+                                        {% else %}
+                                        <h3>No momento esse carro não está disponível! </h3>
+                                        {% endif %}
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Product Detail End -->
+    </div>
+</div>
 
 
-{% endblock  %}
-{% block footer  %} {% include 'footer.html' %} {% endblock  %}
+{% endblock %}
+{% block footer %} {% include 'footer.html' %} {% endblock %}
