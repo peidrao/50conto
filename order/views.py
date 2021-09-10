@@ -1,4 +1,6 @@
 
+from datetime import date
+import datetime
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.db import connection
@@ -9,7 +11,6 @@ from django.shortcuts import render
 from django.views import generic
 from django.urls import reverse_lazy
 
-from django.utils.dateparse import parse_date
 from order.models import CreditCard, Order, Payment, ShopCart
 
 from user.models import User
@@ -26,11 +27,22 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
                 rent_to = request.POST['rent_to']
                 user_id = request.user.id
                 car_id = self.kwargs['id']
-                car_object = Car.objects.raw('SELECT * FROM car_car WHERE id = %s', [car_id])
+                car_object = Car.objects.raw('SELECT * FROM car_car WHERE id = %s', [car_id])[0]
 
-                # if rent_from < car_object.columns
-                # import pdb ; pdb.set_trace()
+                rent_to_parser = datetime.datetime.strptime(rent_to, "%Y-%m-%d").date()
+                rent_from_parser = datetime.datetime.strptime(rent_from, "%Y-%m-%d").date()
 
+                shopcart = ShopCart.objects.raw('SELECT * FROM order_shopcart cart WHERE cart.car_id = %s', [id])[:]
+
+                for cart in shopcart:
+                    if cart.rent_from == rent_from_parser or cart.rent_to == rent_to_parser:
+                        messages.warning(request, 'Você não pode alugar o carro pois ele já está alugado para está data')
+                        return HttpResponseRedirect(f'/car_detail/{id}')
+
+
+                if rent_from_parser < car_object.initial_date or rent_to_parser > car_object.finish_date:
+                    messages.warning(request, 'Você não pode alugar o carro para em uma data indisponível')
+                    return HttpResponseRedirect(f'/car_detail/{id}')
 
                 with connection.cursor() as cursor:
                     cursor.execute("INSERT INTO order_shopcart VALUES(%s, %s, %s, %s, %s, %s)",[
@@ -45,7 +57,6 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
         else:
             messages.warning(request, 'Você precisa logar em uma conta!')
             return HttpResponseRedirect(f'/car_detail/{id}')
-
 
 
 

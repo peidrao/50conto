@@ -51,6 +51,31 @@
                                     <p>R$ {{car.price_day}} <span>$149</span></p>
                                 </div>
 
+
+                                {% if shopcart_count > 0 %}
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Alugado de</th>
+                                            <th scope="col">Alugado até</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cart in shopcart %}
+                                        <tr>
+                                            <th scope="row">{{cart.rent_from}}</th>
+                                            <th>{{cart.rent_to}}</th>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                    <h4>O Carro ainda não foi alugado</h4>
+                                {% endif %}
+
+
+
                                 {% if car.is_past_due %}
                                 <div class="price">
                                     No momento o carro não está disponível

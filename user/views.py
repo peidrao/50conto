@@ -57,10 +57,16 @@ class SignUpUserView(SuccessMessageMixin, generic.CreateView):
         return render(request, self.template_name, {'user_list': User})
 
     def post(self, request, *args, **kwargs):
+        import pdb ; pdb.set_trace()
+
         username = request.POST["username"]
         first_name = request.POST["first_name"]
         email = request.POST["email"]
         last_name = request.POST["last_name"]
+        phone = request.POST["phone"]
+        cpf = request.POST["cpf"]
+        gender = request.POST["gender"]
+        address = request.POST['address']
         type_user = request.POST["type_user"]
         password = request.POST["password1"]
         last_login = datetime.now()
@@ -70,10 +76,10 @@ class SignUpUserView(SuccessMessageMixin, generic.CreateView):
         date_joined = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO user_user VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", [
+            cursor.execute("INSERT INTO user_user VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", [
                 None, make_password(
                     password), last_login, is_superuser, is_staff, is_active, date_joined,
-                username, first_name, last_name, 2, type_user, email])
+                username, first_name, last_name, 2, type_user, email, address, cpf, gender, phone])
 
         return HttpResponseRedirect(reverse_lazy('home:index'))
 
