@@ -22,7 +22,7 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
         if not request.user.is_anonymous:
             user = User.objects.raw(f'SELECT * FROM user_user WHERE id = {request.user.id}')[0]
             if user.type_user == 1:
-
+                ativo = 1
                 rent_from = request.POST['rent_from']
                 rent_to = request.POST['rent_to']
                 user_id = request.user.id
@@ -44,9 +44,10 @@ class AddCartInShopCartView(SuccessMessageMixin, generic.View):
                     messages.warning(request, 'Você não pode alugar o carro para em uma data indisponível')
                     return HttpResponseRedirect(f'/car_detail/{id}')
 
+
                 with connection.cursor() as cursor:
                     cursor.execute("INSERT INTO order_shopcart VALUES(%s, %s, %s, %s, %s, %s)",[
-                    None, rent_from, rent_to, car_id, user_id, True
+                    None, rent_from, rent_to, car_id, user_id, ativo
                 ])
                 messages.success(request, 'Carro adicinado no carrinho com sucesso!')
                 return HttpResponseRedirect(reverse_lazy('order:cart'))
@@ -169,13 +170,14 @@ class CreateOrderView(generic.CreateView):
                     None, status_order, total_price, shopcart.id, last_payment.id, request.user.id
                 ])
 
-            with connection.cursor() as cursor_update:
-                cursor_update.execute("UPDATE order_shopcart SET ativo = 0 WHERE id = %s",[
-                    shopcart.id
-                ])
+            # with connection.cursor() as cursor_update:
+            #     cursor_update.execute("UPDATE order_shopcart SET ativo = 0 WHERE id = %s",[
+            #         shopcart.id
+            #     ])
 
             return render(request, 'order_completed.html', {})
         except Exception as error:
             messages.warning(request, 'Ouve algum problema na finalização do aluguel, verifique se falta algum campo ser preenchido!')
             return HttpResponseRedirect('/order')
+
 

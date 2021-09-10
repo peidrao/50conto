@@ -20,7 +20,7 @@ from django.views import generic
 from car.forms import RateCarUserForm, RegisterCarForm
 from user.models import User
 from car.models import Car, Review
-from order.models import Order
+from order.models import Order, ShopCart
 
 
 class LoginView(generic.View):
@@ -264,3 +264,21 @@ class LesseeProfile(generic.CreateView):
             return HttpResponseRedirect('/contact/thanks/')
         else:
             return HttpResponse('Make sure all fields are entered and valid.')
+
+
+class ReturnCarView(generic.DetailView):
+    model = Car
+
+    def post(self, request, pk):
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    'UPDATE car_car car SET car.status_car = 1 WHERE car.id = %s', [pk])
+
+                cursor.execute(
+                    'UPDATE order_shopcart shop SET shop.ativo = 0 WHERE shop.id = %s', [pk])
+
+            messages.success(request, 'Carro devolvido com sucesso!')
+            return HttpResponseRedirect('/profile')
+        except Exception as error:
+            return HttpResponse(error)

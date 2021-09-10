@@ -26,3 +26,5 @@ class CarDetailView(DetailView):
         }
 
         return render(request, self.template_name, context)
+
+

@@ -29,6 +29,18 @@
             <button type="button" class="btn btn-primary">
               <a href="{% url 'user:rate_car' order.id %}">Avaliar carro</a>
             </button>
+
+            <form method="post" action="{% url 'user:return_car' order.id %}">{% csrf_token %}
+
+                    {% if order.ativo %}
+                    <button type="submit" id="button-cart"  class="btn btn-primary">Devolver carro</button>
+                    {% else %}
+                    <button type="submit" id="button-cart"  class="btn btn-primary" disabled>Devolver carro</button>
+                    {% endif %}
+
+
+
+          </form>
           </td>
         </tr>
         {% endfor %}

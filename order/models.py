@@ -30,13 +30,18 @@ class Order(models.Model):
 
 
 class ShopCart(models.Model):
+    ATIVO = (
+      (  1, 'Ativo'),
+        (2, 'Desativado'),
+    )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     car = models.ForeignKey("car.Car", on_delete=models.CASCADE)
 
     rent_from = models.DateField(null=True)
     rent_to = models.DateField(null=True)
 
-    ativo = models.BooleanField(default=True)
+    ativo = models.IntegerField(choices=ATIVO, default=1)
 
     @property
     def day_quantity(self):
